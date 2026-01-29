@@ -1,8 +1,22 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Eye, Heart } from 'lucide-react';
-import { NFT } from '../lib/mockData';
-
+interface NFT {
+  id: string;
+  name: string;
+  description?: string;
+  image: string;
+  artist: string;
+  artistId?: string;
+  price: number;
+  collectionId?: string;
+  collectionName: string;
+  isListed: boolean;
+  owner?: string;
+  ownerId?: string;
+  createdAt?: string;
+  attributes?: { trait_type: string; value: string }[];
+}
 interface NFTCardProps {
   nft: NFT;
   onClick: () => void;

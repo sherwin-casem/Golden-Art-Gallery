@@ -40,8 +40,10 @@ export function NFTDetailPage({
   const [user, setUser] = useState('')
   const [nft, setNft] = useState<NFTData | null>(null)
   const [listing, setListing] = useState<Listing | null>(null)
+  const [listPrice, setListPrice] = useState('')
   const [artist, setArtist] = useState('')
   const [loading, setLoading] = useState(true)
+  const [actionLoading, setActionLoading] = useState(false)
   const [liked, setLiked] = useState(false)
 
   /* =========================
@@ -125,8 +127,44 @@ export function NFTDetailPage({
     }
   }
 
+    /* =========================
+     LISTING LOGIC
+  ========================== */
+  async function handleList() {
+    if (!listPrice || isNaN(Number(listPrice))) return alert('Enter valid price')
+
+    try {
+      setActionLoading(true)
+      const provider = new ethers.BrowserProvider((window as any).ethereum)
+      const signer = await provider.getSigner()
+      const marketplaceAddress = (import.meta as any).env.VITE_MARKETPLACE_ADDRESS
+
+      // 1. Approve Marketplace to move this NFT
+      const nftContract = new ethers.Contract(collection, GalleryABI.abi, signer)
+      const isApproved = await nftContract.getApproved(tokenId)
+      
+      if (isApproved.toLowerCase() !== marketplaceAddress.toLowerCase()) {
+        const approveTx = await nftContract.approve(marketplaceAddress, tokenId)
+        await approveTx.wait()
+      }
+
+      // 2. List on Marketplace
+      const market = new ethers.Contract(marketplaceAddress, MarketplaceABI.abi, signer)
+      const priceWei = ethers.parseEther(listPrice)
+      const tx = await market.listItem(collection, tokenId, priceWei)
+      await tx.wait()
+
+      await load() // Refresh UI
+    } catch (err: any) {
+      console.error('Listing failed:', err)
+      alert(err.reason || 'Transaction failed')
+    } finally {
+      setActionLoading(false)
+    }
+  }
+
   /* =========================
-     ACTIONS
+     Buying
   ========================== */
   async function handleBuy() {
     if (!listing) return
@@ -179,8 +217,11 @@ export function NFTDetailPage({
     )
   }
 
+  const isOwner = nft?.owner === user
   const isListed = !!listing
   const isSeller = isListed && listing!.seller === user
+
+  console.log("buttonplay>>>", isSeller, isListed);
 
   return (
     <div
@@ -224,6 +265,7 @@ export function NFTDetailPage({
           {/* Details */}
           <div className="space-y-6">
             <h1 className="text-5xl text-[var(--ivory)]">{nft.name}</h1>
+            <p className="text-[var(--gold)] font-mono">Owner: {nft.owner.slice(0,6)}...{nft.owner.slice(-4)}</p>
 
             {artist && (
               <p className="text-[var(--gold)] font-mono">
@@ -248,24 +290,42 @@ export function NFTDetailPage({
             )}
 
             {/* Actions */}
-            <div className="flex gap-4">
-              {!isSeller && isListed && (
-                <button
-                  onClick={handleBuy}
-                  className="flex-1 px-6 py-4 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] rounded"
-                >
-                  Purchase Now
+            <div className="space-y-4">
+              {!isOwner && isListed && (
+                <button onClick={handleBuy} className="w-full py-4 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] rounded font-bold">
+                  Purchase for {ethers.formatEther(listing!.price)} ETH
                 </button>
-              )}
+              )}  
 
-              {isSeller && (
-                <button
-                  onClick={handleCancel}
-                  className="flex-1 px-6 py-4 border-2 border-destructive text-destructive rounded"
-                >
-                  Cancel Listing
+              {/* 2. OWNER VIEW: Not listed yet */}
+            {isOwner && !isListed && (
+              <div className="museum-frame p-6 flex flex-col gap-4">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="List Price (ETH)"
+                    value={listPrice}
+                    onChange={(e) => setListPrice(e.target.value)}
+                    className="w-full bg-black/40 border border-white/10 p-4 rounded text-white"
+                  />
+                  <span className="absolute right-4 top-4 text-[var(--gold)]">ETH</span>
+                </div>
+                <button 
+                  onClick={handleList} 
+                  disabled={actionLoading}
+                  className="w-full py-4 bg-[var(--gold)] text-black rounded font-bold flex items-center justify-center gap-2"
+                >                  
+                  List for Sale
                 </button>
-              )}
+              </div>
+            )}
+
+              {/* 3. OWNER/SELLER VIEW: Already listed */}
+            {isSeller && (
+              <button onClick={handleCancel} className="w-full py-4 border-2 border-red-500/50 text-red-500 rounded font-bold hover:bg-red-500/10">
+                Cancel Listing ({ethers.formatEther(listing!.price)} ETH)
+              </button>
+            )}
 
               <button
                 onClick={() => setLiked(!liked)}

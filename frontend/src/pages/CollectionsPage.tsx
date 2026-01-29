@@ -6,7 +6,7 @@ import { ArrowLeft } from 'lucide-react';
 import { ethers } from 'ethers';
 import FactoryABI from '../abis/CollectionFactory.json';
 import GalleryABI from '../abis/GalleryNFT.json';
-
+import MarketplaceABI from '../abis/GalleryMarketplace.json'
 export interface Collection {
   address: string;
   name: string;
@@ -30,10 +30,84 @@ export function CollectionsPage({ onNavigate, initialCollection }: CollectionsPa
   const [selectedCollection, setSelectedCollection] = useState<any | null>(
     initialCollection || null
   );
+  const [collectionNFTs, setCollectionNFTs] = useState<any[]>([]);
+  const [loadingNFTs, setLoadingNFTs] = useState(false);
 
   useEffect(() => {
     loadCollections();
   }, []);
+
+  useEffect(() => {
+    if (selectedCollection) {
+      loadCollectionNFTs(selectedCollection.address);
+    }
+  }, [selectedCollection]);
+
+  async function loadCollectionNFTs(addr: string) {
+    try {
+      setLoadingNFTs(true)
+
+      const provider = new ethers.BrowserProvider(
+        (window as any).ethereum
+      )
+
+      const nftContract = new ethers.Contract(
+        addr,
+        GalleryABI.abi,
+        provider
+      )
+
+      const market = new ethers.Contract(
+        (import.meta as any).env.VITE_MARKETPLACE_ADDRESS,
+        MarketplaceABI.abi,
+        provider
+      )
+
+      let total: bigint
+      try {
+        total = await nftContract.tokenCounter()
+      } catch {
+        console.warn('tokenCounter not found for collection', addr)
+        return
+      }
+
+      const nfts: any[] = []
+
+      for (let tokenId = 1; tokenId <= Number(total); tokenId++) {
+        try {
+          // 🔹 get listing info
+          const listing = await market.listings(addr, tokenId)
+
+          // 🔴 PUBLIC COLLECTION → only listed NFTs
+          if (listing.price === 0n) continue
+
+          const uri = await nftContract.tokenURI(tokenId)
+          const meta = await fetch(ipfs(uri)).then(r => r.json())
+
+          nfts.push({
+            id: `${addr}-${tokenId}`,
+            tokenId,
+            collection: addr,
+            name: meta.name || `Artwork #${tokenId}`,
+            image: meta.image ? ipfs(meta.image) : '',
+            description: meta.description || '',
+            price: Number(ethers.formatEther(listing.price)),
+            isListed: true,
+          })
+        } catch (err) {
+          console.warn(`Failed to load token ${tokenId}`, err)
+        }
+      }
+
+      setCollectionNFTs(nfts)
+    } catch (err) {
+      console.error('Error loading collection NFTs', err)
+    } finally {
+      setLoadingNFTs(false)
+    }
+  }
+
+
 
   async function loadCollections() {
     try {
@@ -179,7 +253,31 @@ export function CollectionsPage({ onNavigate, initialCollection }: CollectionsPa
                 </p>
               </div>
             </div>
-          </motion.div>         
+          </motion.div>    
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
+          {collectionNFTs.map((nft, index) => (
+            <NFTCard
+              key={nft.id}
+              nft={{
+                id: nft.id,
+                image: nft.image,
+                name: nft.name,
+                price: nft.price,
+                isListed: nft.isListed,
+                artist: selectedCollection.artistName,
+                collectionName: selectedCollection.name,
+              }}
+              index={index}
+              onClick={() =>
+                onNavigate('nft-detail', {
+                  collection: nft.collection,
+                  tokenId: nft.tokenId,
+                })
+              }
+            />
+          ))}
+        </div>     
           
         </div>
       </div>
