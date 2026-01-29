@@ -119,6 +119,13 @@ export function CollectionsPage({ onNavigate, initialCollection }: CollectionsPa
         provider
       );
 
+      const market = new ethers.Contract(
+        (import.meta as any).env.VITE_MARKETPLACE_ADDRESS,
+        MarketplaceABI.abi,
+        provider
+      );
+
+
       const addresses: string[] = await factory.getAllCollections();
 
       const data = await Promise.all(
@@ -143,17 +150,35 @@ export function CollectionsPage({ onNavigate, initialCollection }: CollectionsPa
             }
           }
 
+          const total = Number(await nftContract.tokenCounter());
+
+          let floorPrice = Infinity;
+          let listedCount = 0;
+
+          for (let tokenId = 1; tokenId <= total; tokenId++) {
+            const listing = await market.listings(addr, tokenId);
+
+            if (listing.price > 0n) {
+              listedCount++;
+
+              const price = Number(
+                ethers.formatEther(listing.price)
+              );
+
+              if (price < floorPrice) {
+                floorPrice = price;
+              }
+            }
+          }
+
           return {
-            id: addr, // Mapping address to id for component keys
             address: addr,
             name: name || meta.name,
             description: meta.description || '',
-            coverImage: meta.banner ? ipfs(meta.banner)! : '',
-            nftCount: meta.nftCount || 0,
-            floorPrice: meta.floorPrice || 0,
+            coverImage: meta.banner ? ipfs(meta.banner) : '',
+            nftCount: listedCount, // ✅ only listed NFTs
+            floorPrice: floorPrice === Infinity ? 0 : floorPrice, // ✅ live floor
             artistName: meta.artistName || 'Verified Artist',
-            artistId: meta.artistId || addr, 
-            createdAt: meta.createdAt || new Date().toISOString(),
           };
         })
       );
