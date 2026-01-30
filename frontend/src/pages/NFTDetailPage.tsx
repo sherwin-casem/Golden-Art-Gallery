@@ -291,7 +291,7 @@ export function NFTDetailPage({
 
             {/* Actions */}
             <div className="space-y-4">
-              {!isOwner && isListed && (
+              {!isSeller && isListed && (
                 <button onClick={handleBuy} className="w-full py-4 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] rounded font-bold">
                   Purchase for {ethers.formatEther(listing!.price)} ETH
                 </button>

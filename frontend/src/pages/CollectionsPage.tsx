@@ -302,8 +302,10 @@ export function CollectionsPage({ onNavigate, initialCollection }: CollectionsPa
               index={index}
               onClick={() =>
                 onNavigate('nft-detail', {
-                  collection: nft.collection,
-                  tokenId: nft.tokenId,
+                  nft: {
+                    collection: nft.collection,
+                    tokenId: nft.tokenId,
+                  }                  
                 })
               }
             />
