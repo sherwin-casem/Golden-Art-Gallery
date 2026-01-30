@@ -4,6 +4,7 @@ import { CollectionCard } from '../components/CollectionCard';
 import { NFTCard } from '../components/NFTCard';
 import { ArrowLeft } from 'lucide-react';
 import { ethers } from 'ethers';
+
 import FactoryABI from '../abis/CollectionFactory.json';
 import GalleryABI from '../abis/GalleryNFT.json';
 import MarketplaceABI from '../abis/GalleryMarketplace.json'
@@ -15,6 +16,7 @@ export interface Collection {
   nftCount: number;
   floorPrice: number;
   artistName: string;
+  volume: number;
 }
 
 interface CollectionsPageProps {
@@ -154,6 +156,7 @@ export function CollectionsPage({ onNavigate, initialCollection }: CollectionsPa
 
           let floorPrice = Infinity;
           let listedCount = 0;
+          let volume = 0;
 
           for (let tokenId = 1; tokenId <= total; tokenId++) {
             const listing = await market.listings(addr, tokenId);
@@ -164,6 +167,8 @@ export function CollectionsPage({ onNavigate, initialCollection }: CollectionsPa
               const price = Number(
                 ethers.formatEther(listing.price)
               );
+
+              volume += price;
 
               if (price < floorPrice) {
                 floorPrice = price;
@@ -178,7 +183,8 @@ export function CollectionsPage({ onNavigate, initialCollection }: CollectionsPa
             coverImage: meta.banner ? ipfs(meta.banner) : '',
             nftCount: listedCount, // ✅ only listed NFTs
             floorPrice: floorPrice === Infinity ? 0 : floorPrice, // ✅ live floor
-            artistName: meta.artistName || 'Verified Artist',
+            artistName: meta.artistName,
+            volume: volume,
           };
         })
       );
@@ -269,7 +275,7 @@ export function CollectionsPage({ onNavigate, initialCollection }: CollectionsPa
                   <div>
                     <p className="text-xs text-muted-foreground uppercase mb-1">Volume</p>
                     <p className="text-xl text-[var(--ivory)]">
-                      {(selectedCollection.floorPrice * selectedCollection.nftCount).toFixed(1)} ETH
+                      {selectedCollection.volume} ETH
                     </p>
                   </div>
                 </div>
