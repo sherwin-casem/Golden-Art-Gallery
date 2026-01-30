@@ -4,6 +4,7 @@ import { CollectionCard } from '../components/CollectionCard';
 import { NFTCard } from '../components/NFTCard';
 import { ArrowLeft } from 'lucide-react';
 import { ethers } from 'ethers';
+
 import FactoryABI from '../abis/CollectionFactory.json';
 import GalleryABI from '../abis/GalleryNFT.json';
 import MarketplaceABI from '../abis/GalleryMarketplace.json'

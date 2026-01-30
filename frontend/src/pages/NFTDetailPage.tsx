@@ -295,7 +295,7 @@ export function NFTDetailPage({
                 <button onClick={handleBuy} className="w-full py-4 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] rounded font-bold">
                   Purchase for {ethers.formatEther(listing!.price)} ETH
                 </button>
-              )}  
+              )}
 
               {/* 2. OWNER VIEW: Not listed yet */}
             {isOwner && !isListed && (
