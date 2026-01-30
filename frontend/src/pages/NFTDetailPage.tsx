@@ -217,11 +217,11 @@ export function NFTDetailPage({
     )
   }
 
-  const isOwner = nft?.owner === user
+  const isOwner = !listing && nft?.owner === user
   const isListed = !!listing
   const isSeller = isListed && listing!.seller === user
 
-  console.log("buttonplay>>>", isSeller, isListed);
+  console.log("buttonplay>>>", isSeller, isListed, isOwner);
 
   return (
     <div
