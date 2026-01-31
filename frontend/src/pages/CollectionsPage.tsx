@@ -181,8 +181,8 @@ export function CollectionsPage({ onNavigate, initialCollection }: CollectionsPa
             name: name || meta.name,
             description: meta.description || '',
             coverImage: meta.banner ? ipfs(meta.banner) : '',
-            nftCount: listedCount, // ✅ only listed NFTs
-            floorPrice: floorPrice === Infinity ? 0 : floorPrice, // ✅ live floor
+            nftCount: listedCount, // only listed NFTs
+            floorPrice: floorPrice === Infinity ? 0 : floorPrice, //  live floor
             artistName: meta.artistName,
             volume: volume,
           };
