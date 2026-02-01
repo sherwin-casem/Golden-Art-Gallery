@@ -285,21 +285,44 @@ export function NFTDetailPage({
   }
 
   async function handleBid() {
-    if (!bidAmount) return
+    if (!auction) return
+    if (!bidAmount || Number(bidAmount) <= 0) {
+      return alert('Enter a valid bid amount')
+    }
+
+    // Prevent seller from bidding
+    if (isAuctionSeller) {
+      return alert('Seller cannot bid on own auction')
+    }
+
+    // Enforce minimum bid
+    const min =
+      auction.highestBid > 0n
+        ? Number(ethers.formatEther(auction.highestBid))
+        : 0
+
+    if (Number(bidAmount) <= min) {
+      return alert(`Bid must be higher than ${min} ETH`)
+    }
+
     try {
       setActionLoading(true)
+
       const provider = new ethers.BrowserProvider((window as any).ethereum)
       const signer = await provider.getSigner()
+
       const auctionContract = new ethers.Contract(
         (import.meta as any).env.VITE_AUCTION_ADDRESS,
         AuctionABI.abi,
         signer
       )
 
-      const tx = await auctionContract.bid(auction.id, {
-        value: ethers.parseEther(bidAmount),
-      })
-      await tx.wait()
+      await (
+        await auctionContract.bid(auction.id, {
+          value: ethers.parseEther(bidAmount),
+        })
+      ).wait()
+
       setBidAmount('')
       await load()
     } catch (err: any) {
@@ -382,7 +405,12 @@ export function NFTDetailPage({
   const isListed = !!listing
   const isSeller = isListed && listing!.seller === user
   const canListAuction = isOwner && !isListed && !auction
+  const isAuctionActive = auction && Date.now() / 1000 < Number(auction.endTime)
 
+  const minBid =
+    auction && auction.highestBid > 0n
+      ? ethers.formatEther(auction.highestBid)
+      : '0'
 
   console.log("buttonplay>>>", isSeller, isListed, isOwner, isAuctionSeller);
 
@@ -498,7 +526,7 @@ export function NFTDetailPage({
                     : 'No bids yet'}
                 </p>
 
-                {Date.now() / 1000 < Number(auction.endTime) ? (
+                {isAuctionActive ? (
                   isAuctionSeller ? (
                     <button
                       onClick={handleCancelAuction}
