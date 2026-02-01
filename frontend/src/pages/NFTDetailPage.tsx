@@ -13,6 +13,7 @@ interface Auction {
   nft: string
   tokenId: bigint
   endTime: bigint
+  startPrice: bigint
   highestBid: bigint
   settled: boolean
 }
@@ -125,6 +126,7 @@ export function NFTDetailPage({
             seller: a.seller,
             nft: a.nft,
             tokenId: a.tokenId,
+            startPrice: a.startPrice,
             endTime: a.endTime,      // Explicitly assigned
             highestBid: a.highestBid,
             settled: a.settled
@@ -300,25 +302,35 @@ export function NFTDetailPage({
     }
   }
 
+  function getMinBidWei(a: Auction): bigint {
+  if (a.highestBid === 0n) {
+    return a.startPrice
+  }
+
+  let minIncrement = a.highestBid / 20n // 5%
+  if (minIncrement === 0n) minIncrement = 1n
+
+  return a.highestBid + minIncrement
+}
+
   async function handleBid() {
     if (!auction) return
+
     if (!bidAmount || Number(bidAmount) <= 0) {
       return alert('Enter a valid bid amount')
     }
 
-    // Prevent seller from bidding
     if (isAuctionSeller) {
       return alert('Seller cannot bid on own auction')
     }
 
-    // Enforce minimum bid
-    const min =
-      auction.highestBid > 0n
-        ? Number(ethers.formatEther(auction.highestBid))
-        : 0
+    const bidWei = ethers.parseEther(bidAmount)
+    const minBidWei = getMinBidWei(auction)
 
-    if (Number(bidAmount) <= min) {
-      return alert(`Bid must be higher than ${min} ETH`)
+    if (bidWei < minBidWei) {
+      return alert(
+        `Minimum bid is ${ethers.formatEther(minBidWei)} ETH`
+      )
     }
 
     try {
@@ -334,9 +346,7 @@ export function NFTDetailPage({
       )
 
       await (
-        await auctionContract.bid(auction.id, {
-          value: ethers.parseEther(bidAmount),
-        })
+        await auctionContract.bid(auction.id, { value: bidWei })
       ).wait()
 
       setBidAmount('')
@@ -347,6 +357,7 @@ export function NFTDetailPage({
       setActionLoading(false)
     }
   }
+
 
   async function handleSettleAuction() {
     try {
@@ -549,6 +560,13 @@ export function NFTDetailPage({
                     : 'No bids yet'}
                 </p>
 
+                {auction && isAuctionActive && !isAuctionSeller && (
+                  <p className="text-sm text-muted-foreground">
+                    Minimum bid:{' '}
+                    {ethers.formatEther(getMinBidWei(auction))} ETH
+                  </p>
+                )}
+
                 {isAuctionActive ? (
                   isAuctionSeller ? (
                     <button
@@ -605,7 +623,7 @@ export function NFTDetailPage({
 
                 <button
                   onClick={handleCreateAuction}
-                  className="w-full py-4 border rounded font-bold"
+                  className="w-full py-4 bg-[var(--gold)] text-black rounded font-bold flex items-center justify-center gap-2"
                 >
                   Start Auction
                 </button>
