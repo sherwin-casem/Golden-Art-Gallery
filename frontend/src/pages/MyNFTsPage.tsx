@@ -6,6 +6,7 @@ import { Package, TrendingUp, DollarSign } from 'lucide-react'
 import FactoryABI from '../abis/CollectionFactory.json'
 import GalleryABI from '../abis/GalleryNFT.json'
 import MarketplaceABI from '../abis/GalleryMarketplace.json'
+import AuctionABI from '../abis/GalleryAuction.json'
 import { NFTCard } from '../components/NFTCard'
 
 interface MyNFTsPageProps {
@@ -46,6 +47,9 @@ export function MyNFTsPage({ onNavigate }: MyNFTsPageProps) {
       const provider = new ethers.BrowserProvider((window as any).ethereum)
       const signer = await provider.getSigner()
       const user = (await signer.getAddress()).toLowerCase()
+      const marketplaceAddress = (import.meta as any).env.VITE_MARKETPLACE_ADDRESS.toLowerCase()
+      const auctionAddress = (import.meta as any).env.VITE_AUCTION_ADDRESS.toLowerCase()
+
 
       const factory = new ethers.Contract(
         (import.meta as any).env.VITE_FACTORY_ADDRESS,
@@ -58,6 +62,29 @@ export function MyNFTsPage({ onNavigate }: MyNFTsPageProps) {
         MarketplaceABI.abi,
         provider
       )
+
+      const auctionContract = new ethers.Contract(
+        auctionAddress,
+        AuctionABI.abi,
+        provider
+      )
+
+      const auctionMap = new Map<string, { seller: string; price: bigint }>()
+      try {
+        const totalAuctions = await auctionContract.auctionCounter()
+        for (let i = 1; i <= Number(totalAuctions); i++) {
+          const a = await auctionContract.auctions(i)
+          if (!a.settled) {
+            const key = `${a.nft.toLowerCase()}-${Number(a.tokenId)}`
+            auctionMap.set(key, { 
+              seller: a.seller.toLowerCase(), 
+              price: a.highestBid 
+            })
+          }
+        }
+      } catch (err) {
+        console.warn('Failed to load auctions:', err)
+      }
 
       const collections: string[] = await factory.getAllCollections()
       const owned: OwnedNFT[] = []
@@ -86,13 +113,16 @@ export function MyNFTsPage({ onNavigate }: MyNFTsPageProps) {
           }
 
           const listing = await market.listings(collection, tokenId)
+          const auctionData = auctionMap.get(`${collection.toLowerCase()}-${tokenId}`)
 
           const isOwned =
             owner === user ||
-            (owner === (import.meta as any).env.VITE_MARKETPLACE_ADDRESS.toLowerCase() &&
+            (owner === marketplaceAddress &&
               listing.price > 0n &&
-              listing.seller.toLowerCase() === user)
-
+              listing.seller.toLowerCase() === user) ||
+            (owner === auctionAddress &&
+              auctionData?.seller === user)
+              
           if (!isOwned) continue
 
           /* Metadata */

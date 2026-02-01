@@ -5,6 +5,17 @@ import { ethers } from 'ethers'
 
 import GalleryABI from '../abis/GalleryNFT.json'
 import MarketplaceABI from '../abis/GalleryMarketplace.json'
+import AuctionABI from '../abis/GalleryAuction.json'
+
+interface Auction {
+  id: number
+  seller: string
+  nft: string
+  tokenId: bigint
+  endTime: bigint
+  highestBid: bigint
+  settled: boolean
+}
 
 interface NFTDetailPageProps {
   data: {
@@ -45,6 +56,11 @@ export function NFTDetailPage({
   const [loading, setLoading] = useState(true)
   const [actionLoading, setActionLoading] = useState(false)
   const [liked, setLiked] = useState(false)
+  const [auction, setAuction] = useState<any | null>(null)
+  const [startPrice, setStartPrice] = useState('')
+  const [duration, setDuration] = useState('24')
+  const [bidAmount, setBidAmount] = useState('')
+
 
   /* =========================
      LOAD NFT
@@ -81,6 +97,31 @@ export function NFTDetailPage({
         MarketplaceABI.abi,
         provider
       )
+
+      const auctionContract = new ethers.Contract(
+        (import.meta as any).env.VITE_AUCTION_ADDRESS,
+        AuctionABI.abi,
+        provider
+      )
+
+      // find active auction for this NFT
+      let found = null
+      const total = await auctionContract.auctionCounter()
+
+      for (let i = 1; i <= Number(total); i++) {
+        const a = await auctionContract.auctions(i)
+        if (
+          a.nft.toLowerCase() === collection.toLowerCase() &&
+          Number(a.tokenId) === tokenId &&
+          !a.settled
+        ) {
+          found = { id: i, ...a }
+          break
+        }
+      }
+
+      setAuction(found)
+
 
       const owner = (await nftContract.ownerOf(tokenId)).toLowerCase()
       const listingData = await market.listings(collection, tokenId)
@@ -206,6 +247,124 @@ export function NFTDetailPage({
     await load()
   }
 
+  async function handleCreateAuction() {
+    if (!startPrice || Number(startPrice) <= 0) return alert('Invalid start price')
+
+    try {
+      setActionLoading(true)
+      const provider = new ethers.BrowserProvider((window as any).ethereum)
+      const signer = await provider.getSigner()
+      const auctionAddress = (import.meta as any).env.VITE_AUCTION_ADDRESS
+
+      const nftContract = new ethers.Contract(collection, GalleryABI.abi, signer)
+      const auctionContract = new ethers.Contract(auctionAddress, AuctionABI.abi, signer)
+
+      // 1. Approve Auction Contract
+      const approved = await nftContract.getApproved(tokenId)
+      if (approved.toLowerCase() !== auctionAddress.toLowerCase()) {
+        await (await nftContract.approve(auctionAddress, tokenId)).wait()
+      }
+
+      // 2. Start Auction (Duration in seconds)
+      const durationSec = Number(duration) * 3600
+      const tx = await auctionContract.createAuction(
+        collection,
+        tokenId,
+        ethers.parseEther(startPrice),
+        durationSec
+      )
+      await tx.wait()
+      
+      await load()
+    } catch (err: any) {
+      console.error('Create auction failed:', err)
+      alert(err.reason || 'Failed to start auction')
+    } finally {
+      setActionLoading(false)
+    }
+  }
+
+  async function handleBid() {
+    if (!bidAmount) return
+    try {
+      setActionLoading(true)
+      const provider = new ethers.BrowserProvider((window as any).ethereum)
+      const signer = await provider.getSigner()
+      const auctionContract = new ethers.Contract(
+        (import.meta as any).env.VITE_AUCTION_ADDRESS,
+        AuctionABI.abi,
+        signer
+      )
+
+      const tx = await auctionContract.bid(auction.id, {
+        value: ethers.parseEther(bidAmount),
+      })
+      await tx.wait()
+      setBidAmount('')
+      await load()
+    } catch (err: any) {
+      alert(err.reason || 'Bidding failed')
+    } finally {
+      setActionLoading(false)
+    }
+  }
+
+  async function handleSettleAuction() {
+    try {
+      setActionLoading(true)
+      const provider = new ethers.BrowserProvider((window as any).ethereum)
+      const signer = await provider.getSigner()
+      const auctionContract = new ethers.Contract(
+        (import.meta as any).env.VITE_AUCTION_ADDRESS,
+        AuctionABI.abi,
+        signer
+      )
+
+      await (await auctionContract.settleAuction(auction.id)).wait()
+      onNavigate('my-nfts')
+    } catch (err: any) {
+      alert(err.reason || 'Settlement failed')
+    } finally {
+      setActionLoading(false)
+    }
+  }
+
+  async function handleWithdraw() {
+    const provider = new ethers.BrowserProvider((window as any).ethereum)
+    const signer = await provider.getSigner()
+
+    const auctionContract = new ethers.Contract(
+      (import.meta as any).env.VITE_AUCTION_ADDRESS,
+      AuctionABI.abi,
+      signer
+    )
+
+    await (await auctionContract.withdraw()).wait()
+  }
+
+    async function handleCancelAuction() {
+      try {
+        setActionLoading(true)
+        const provider = new ethers.BrowserProvider((window as any).ethereum)
+        const signer = await provider.getSigner()
+        const auctionContract = new ethers.Contract(
+          (import.meta as any).env.VITE_AUCTION_ADDRESS,
+          AuctionABI.abi,
+          signer
+        )
+
+        const tx = await auctionContract.cancelAuction(auction.id)
+        await tx.wait()
+        await load()
+      } catch (err: any) {
+        console.error('Cancel auction failed:', err)
+        alert(err.reason || 'Failed to cancel auction')
+      } finally {
+        setActionLoading(false)
+      }
+    }
+
+
   /* =========================
      UI STATES
   ========================== */
@@ -217,11 +376,15 @@ export function NFTDetailPage({
     )
   }
 
-  const isOwner = !listing && nft?.owner === user
+  const auctionSeller = auction?.seller ? auction.seller.toLowerCase() : null
+  const isOwner = nft?.owner === user || auctionSeller === user
+  const isAuctionSeller = auctionSeller === user
   const isListed = !!listing
   const isSeller = isListed && listing!.seller === user
+  const canListAuction = isOwner && !isListed && !auction
 
-  console.log("buttonplay>>>", isSeller, isListed, isOwner);
+
+  console.log("buttonplay>>>", isSeller, isListed, isOwner, isAuctionSeller);
 
   return (
     <div
@@ -298,7 +461,7 @@ export function NFTDetailPage({
               )}
 
               {/* 2. OWNER VIEW: Not listed yet */}
-            {isOwner && !isListed && (
+            {isOwner && !isListed && !auction && (
               <div className="museum-frame p-6 flex flex-col gap-4">
                 <div className="relative">
                   <input
@@ -319,6 +482,85 @@ export function NFTDetailPage({
                 </button>
               </div>
             )}
+
+             {auction && (
+              <div className="museum-frame p-6 space-y-4">
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-[var(--gold)] uppercase font-bold">Active Auction</span>
+                  <span className="text-muted-foreground">
+                    Ends: {new Date(Number(auction.endTime) * 1000).toLocaleString()}
+                  </span>
+                </div>
+
+                <p className="text-3xl text-[var(--gold)]">
+                  {auction.highestBid > 0n
+                    ? `${ethers.formatEther(auction.highestBid)} ETH`
+                    : 'No bids yet'}
+                </p>
+
+                {Date.now() / 1000 < Number(auction.endTime) ? (
+                  isAuctionSeller ? (
+                    <button
+                      onClick={handleCancelAuction}
+                      disabled={actionLoading}
+                      className="w-full py-4 border-2 border-red-500/50 text-red-500 rounded font-bold hover:bg-red-500/10"
+                    >
+                      Cancel Auction
+                    </button>
+                  ) : (
+                    <div className="flex gap-2">
+                      <input
+                        value={bidAmount}
+                        onChange={(e) => setBidAmount(e.target.value)}
+                        placeholder="Bid amount (ETH)"
+                        className="flex-1 bg-black/40 border p-4 rounded"
+                      />
+                      <button
+                        onClick={handleBid}
+                        disabled={actionLoading}
+                        className="px-8 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] rounded font-bold"
+                      >
+                        Bid
+                      </button>
+                    </div>
+                  )
+                ) : (
+                  <button
+                    onClick={handleSettleAuction}
+                    disabled={actionLoading}
+                    className="w-full py-4 bg-[var(--gold)] text-black rounded font-bold"
+                  >
+                    Settle Auction
+                  </button>
+                )}
+              </div>
+            )}
+            
+            {canListAuction && (
+              <div className="museum-frame p-6 space-y-4">
+                <input
+                  value={startPrice}
+                  onChange={(e) => setStartPrice(e.target.value)}
+                  placeholder="Start price (ETH)"
+                  className="w-full bg-black/40 border p-4 rounded"
+                />
+
+                <input
+                  value={duration}
+                  onChange={(e) => setDuration(e.target.value)}
+                  placeholder="Duration (hours)"
+                  className="w-full bg-black/40 border p-4 rounded"
+                />
+
+                <button
+                  onClick={handleCreateAuction}
+                  className="w-full py-4 border rounded font-bold"
+                >
+                  Start Auction
+                </button>
+              </div>
+            )}
+
 
               {/* 3. OWNER/SELLER VIEW: Already listed */}
             {isSeller && (
