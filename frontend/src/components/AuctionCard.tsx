@@ -1,10 +1,24 @@
 import React, { useState, useEffect } from 'react';
+import { ethers } from 'ethers'
 import { motion } from 'motion/react';
-import { Auction } from '../lib/mockData';
 import { Clock, TrendingUp, Gavel } from 'lucide-react';
 
+export interface AuctionCard {
+  id: number;
+  nft: {
+    name: string;
+    image: string;
+    collection: string;// Used in your hover overlay
+    artist?: string;        // Used in your hover overlay
+  };
+  highestBid: number;
+  startPrice: number;
+  endTime: number;
+  isActive: boolean;
+  bids: any[];  
+}
 interface AuctionCardProps {
-  auction: Auction;
+  auction: AuctionCard;
   onClick: () => void;
   index?: number;
 }
@@ -75,7 +89,7 @@ export function AuctionCard({ auction, onClick, index = 0 }: AuctionCardProps) {
           {/* Hover Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400 flex flex-col justify-end p-6">
             <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-400">
-              <p className="text-sm text-[var(--champagne)] mb-2">{auction.nft.collectionName}</p>
+              <p className="text-sm text-[var(--champagne)] mb-2">{auction.nft.collection}</p>
               <h4 className="text-[var(--ivory)] mb-1">{auction.nft.name}</h4>
               <p className="text-sm text-[var(--gold)]">{auction.nft.artist}</p>
             </div>
@@ -88,10 +102,10 @@ export function AuctionCard({ auction, onClick, index = 0 }: AuctionCardProps) {
             {/* Current Bid */}
             <div className="flex items-center justify-between pb-3 border-b border-border">
               <div>
-                <p className="text-xs text-muted-foreground uppercase mb-1">Current Bid</p>
+                <p className="text-xs text-muted-foreground uppercase mb-1">Highest Bid</p>
                 <p className="text-xl text-[var(--gold)] flex items-center gap-2">
                   <Gavel className="w-4 h-4" />
-                  {auction.currentBid} ETH
+                  {auction.highestBid} ETH
                 </p>
               </div>
               <div className="text-right">
@@ -102,14 +116,16 @@ export function AuctionCard({ auction, onClick, index = 0 }: AuctionCardProps) {
 
             {/* Highest Bidder */}
             <div className="flex items-center justify-between">
-              <div className="flex-1">
-                <p className="text-xs text-muted-foreground uppercase mb-1">Highest Bidder</p>
-                <p className="text-sm text-[var(--ivory)] truncate">{auction.highestBidder}</p>
-              </div>
               <div className="flex items-center gap-1 text-green-500">
                 <TrendingUp className="w-4 h-4" />
                 <span className="text-sm">
-                  {((auction.currentBid - auction.startPrice) / auction.startPrice * 100).toFixed(0)}%
+                  {(() => {
+                    const highestBidEth = Number(ethers.formatEther(BigInt(auction.highestBid)));
+                    const startPriceEth = Number(ethers.formatEther(BigInt(auction.startPrice)));
+                    return startPriceEth > 0
+                      ? (((highestBidEth - startPriceEth) / startPriceEth) * 100).toFixed(0)
+                      : '0';
+                  })()}%
                 </span>
               </div>
             </div>
@@ -117,7 +133,7 @@ export function AuctionCard({ auction, onClick, index = 0 }: AuctionCardProps) {
             {/* Bid Count */}
             <div className="pt-3 border-t border-border">
               <p className="text-xs text-muted-foreground">
-                {auction.bids.length} bid{auction.bids.length !== 1 ? 's' : ''} placed
+                {(auction.bids?.length || 0)} bid{(auction.bids?.length !== 1) ? 's' : ''} placed
               </p>
             </div>
           </div>
