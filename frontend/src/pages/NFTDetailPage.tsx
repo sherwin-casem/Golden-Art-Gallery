@@ -13,6 +13,7 @@ interface Auction {
   nft: string
   tokenId: bigint
   endTime: bigint
+  startPrice: bigint
   highestBid: bigint
   settled: boolean
 }
@@ -71,6 +72,9 @@ export function NFTDetailPage({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collection, tokenId])
 
+  const safeLower = (v?: string) =>
+    typeof v === 'string' ? v.toLowerCase() : ''
+
   async function load() {
     try {
       setLoading(true)
@@ -108,15 +112,26 @@ export function NFTDetailPage({
       let found = null
       const total = await auctionContract.auctionCounter()
 
+      // Inside NFTDetailPage.tsx -> load() function
       for (let i = 1; i <= Number(total); i++) {
-        const a = await auctionContract.auctions(i)
+        const a = await auctionContract.auctions(i);
+        
         if (
-          a.nft.toLowerCase() === collection.toLowerCase() &&
+          safeLower(a.nft) === safeLower(collection) &&
           Number(a.tokenId) === tokenId &&
           !a.settled
         ) {
-          found = { id: i, ...a }
-          break
+          found = {
+            id: i,
+            seller: a.seller,
+            nft: a.nft,
+            tokenId: a.tokenId,
+            startPrice: a.startPrice,
+            endTime: a.endTime,      // Explicitly assigned
+            highestBid: a.highestBid,
+            settled: a.settled
+          };
+          break;
         }
       }
 
@@ -132,7 +147,7 @@ export function NFTDetailPage({
           tokenId,
           ethers.parseEther('1')
         )
-        setArtist(receiver.toLowerCase())
+        setArtist(safeLower(receiver))
       } catch {
         setArtist('')
       }
@@ -156,11 +171,12 @@ export function NFTDetailPage({
       setListing(
         listingData.price > 0n
           ? {
-              seller: listingData.seller.toLowerCase(),
+              seller: safeLower(listingData.seller),
               price: listingData.price,
             }
           : null
       )
+
     } catch (err) {
       console.error('NFT load failed:', err)
     } finally {
@@ -261,9 +277,11 @@ export function NFTDetailPage({
 
       // 1. Approve Auction Contract
       const approved = await nftContract.getApproved(tokenId)
-      if (approved.toLowerCase() !== auctionAddress.toLowerCase()) {
+
+      if (safeLower(approved) !== safeLower(auctionAddress)) {
         await (await nftContract.approve(auctionAddress, tokenId)).wait()
       }
+
 
       // 2. Start Auction (Duration in seconds)
       const durationSec = Number(duration) * 3600
@@ -284,25 +302,35 @@ export function NFTDetailPage({
     }
   }
 
+  function getMinBidWei(a: Auction): bigint {
+  if (a.highestBid === 0n) {
+    return a.startPrice
+  }
+
+  let minIncrement = a.highestBid / 20n // 5%
+  if (minIncrement === 0n) minIncrement = 1n
+
+  return a.highestBid + minIncrement
+}
+
   async function handleBid() {
     if (!auction) return
+
     if (!bidAmount || Number(bidAmount) <= 0) {
       return alert('Enter a valid bid amount')
     }
 
-    // Prevent seller from bidding
     if (isAuctionSeller) {
       return alert('Seller cannot bid on own auction')
     }
 
-    // Enforce minimum bid
-    const min =
-      auction.highestBid > 0n
-        ? Number(ethers.formatEther(auction.highestBid))
-        : 0
+    const bidWei = ethers.parseEther(bidAmount)
+    const minBidWei = getMinBidWei(auction)
 
-    if (Number(bidAmount) <= min) {
-      return alert(`Bid must be higher than ${min} ETH`)
+    if (bidWei < minBidWei) {
+      return alert(
+        `Minimum bid is ${ethers.formatEther(minBidWei)} ETH`
+      )
     }
 
     try {
@@ -318,9 +346,7 @@ export function NFTDetailPage({
       )
 
       await (
-        await auctionContract.bid(auction.id, {
-          value: ethers.parseEther(bidAmount),
-        })
+        await auctionContract.bid(auction.id, { value: bidWei })
       ).wait()
 
       setBidAmount('')
@@ -331,6 +357,7 @@ export function NFTDetailPage({
       setActionLoading(false)
     }
   }
+
 
   async function handleSettleAuction() {
     try {
@@ -399,20 +426,27 @@ export function NFTDetailPage({
     )
   }
 
-  const auctionSeller = auction?.seller ? auction.seller.toLowerCase() : null
+  const auctionSeller =
+    auction?.seller && typeof auction.seller === 'string'
+      ? auction.seller.toLowerCase()
+      : null
+
   const isOwner = nft?.owner === user || auctionSeller === user
   const isAuctionSeller = auctionSeller === user
   const isListed = !!listing
   const isSeller = isListed && listing!.seller === user
   const canListAuction = isOwner && !isListed && !auction
-  const isAuctionActive = auction && Date.now() / 1000 < Number(auction.endTime)
 
-  const minBid =
-    auction && auction.highestBid > 0n
-      ? ethers.formatEther(auction.highestBid)
-      : '0'
+  const now = BigInt(Math.floor(Date.now() / 1000)); // Convert now to BigInt for direct comparison
+
+  const isAuctionActive =
+    !!auction &&
+    auction.endTime > 0n &&
+    auction.endTime > now; // Both are now BigInt (seconds)
+
 
   console.log("buttonplay>>>", isSeller, isListed, isOwner, isAuctionSeller);
+  console.log("buttonplay>>>", isAuctionActive, isAuctionSeller);
 
   return (
     <div
@@ -526,6 +560,13 @@ export function NFTDetailPage({
                     : 'No bids yet'}
                 </p>
 
+                {auction && isAuctionActive && !isAuctionSeller && (
+                  <p className="text-sm text-muted-foreground">
+                    Minimum bid:{' '}
+                    {ethers.formatEther(getMinBidWei(auction))} ETH
+                  </p>
+                )}
+
                 {isAuctionActive ? (
                   isAuctionSeller ? (
                     <button
@@ -582,7 +623,7 @@ export function NFTDetailPage({
 
                 <button
                   onClick={handleCreateAuction}
-                  className="w-full py-4 border rounded font-bold"
+                  className="w-full py-4 bg-[var(--gold)] text-black rounded font-bold flex items-center justify-center gap-2"
                 >
                   Start Auction
                 </button>
