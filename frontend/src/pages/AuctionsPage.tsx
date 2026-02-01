@@ -133,62 +133,6 @@ export function AuctionsPage({ onNavigate, initialAuction }: AuctionsPageProps) 
     }
   }
  
-  async function handleBid() {
-    if (!selectedAuction) return
-    if (!bidAmount || Number(bidAmount) <= 0) {
-      return alert('Enter a valid bid')
-    }
-
-    if (isAuctionSeller) {
-      return alert('Seller cannot bid on own auction')
-    }
-
-    if (Number(bidAmount) <= minBid) {
-      return alert(`Bid must be higher than ${minBid} ETH`)
-    }
-
-    try {
-      const provider = new ethers.BrowserProvider((window as any).ethereum)
-      const signer = await provider.getSigner()
-
-      const auctionContract = new ethers.Contract(
-        (import.meta as any).env.VITE_AUCTION_ADDRESS,
-        AuctionABI.abi,
-        signer
-      )
-
-      await (
-        await auctionContract.bid(selectedAuction.id, {
-          value: ethers.parseEther(bidAmount),
-        })
-      ).wait()
-
-      setBidAmount('')
-      await loadAuctions()
-    } catch (err: any) {
-      alert(err.reason || 'Bidding failed')
-    }
-  }
-
-
-  const handleStopAuction = () => {
-    alert('Auction stopped successfully');
-    setSelectedAuction(null);
-  };
-
-  const auctionSeller = selectedAuction?.seller?.toLowerCase() || null
-  const isAuctionSeller = auctionSeller === user
-
-  const isAuctionActive =
-    selectedAuction &&
-    Date.now() / 1000 < Number(selectedAuction.endTime)
-
-   const minBid =
-    selectedAuction && selectedAuction.highestBid > 0n
-      ? Number(ethers.formatEther(selectedAuction.highestBid))
-      : 0
-
-
 
   if (selectedAuction) {
     
@@ -216,132 +160,7 @@ export function AuctionsPage({ onNavigate, initialAuction }: AuctionsPageProps) 
             Back to Auctions
           </motion.button>
 
-          <div className="grid lg:grid-cols-2 gap-12">
-            {/* NFT Image */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              className="museum-frame overflow-hidden"
-            >
-              <div className="aspect-square bg-[var(--deep-black)] relative">
-                <img
-                  src={selectedAuction.nft.image}
-                  alt={selectedAuction.nft.name}
-                  className="w-full h-full object-cover"
-                />
-                {selectedAuction.isActive && (
-                  <div className="absolute top-6 left-6 px-4 py-2 bg-red-600 text-white uppercase rounded flex items-center gap-2 animate-pulse">
-                    <div className="w-2 h-2 rounded-full bg-white" />
-                    Live Auction
-                  </div>
-                )}
-              </div>
-            </motion.div>
-
-            {/* Auction Details */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="space-y-6"
-            >
-              <div>
-                <div className="inline-flex items-center px-3 py-1 bg-[var(--gold)]/20 border border-[var(--gold)]/30 rounded text-sm text-[var(--gold)] mb-4">
-                  {selectedAuction.nft.collection}
-                </div>
-                <h1 className="text-4xl mb-4 text-[var(--ivory)]">{selectedAuction.nft.name}</h1>                
-              </div>
-
-              {/* Current Bid */}
-              <div className="museum-frame p-6">
-                <div className="flex items-start justify-between mb-6">
-                  <div>
-                    <p className="text-sm text-muted-foreground uppercase mb-2">Highest Bid</p>
-                    <p className="text-5xl text-[var(--gold)] flex items-center gap-3">
-                      <Gavel className="w-8 h-8" />
-                      {selectedAuction.highestBid} ETH
-                    </p>
-                    <p className="text-sm text-muted-foreground mt-2">
-                      ≈ ${(Number(ethers.formatEther(selectedAuction.highestBid)) * 2000).toLocaleString()} USD
-
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm text-muted-foreground uppercase mb-2">Start Price</p>
-                    <p className="text-xl text-[var(--ivory)]">{selectedAuction.startPrice} ETH</p>
-                    <div className="flex items-center gap-1 text-green-500 mt-2">
-                      <TrendingUp className="w-4 h-4" />
-                      <span className="text-sm">
-                        +{selectedAuction.startPrice > 0n
-                          ? (
-                              ( (Number(selectedAuction.highestBid) - Number(selectedAuction.startPrice)) / 
-                                Number(selectedAuction.startPrice) 
-                              ) * 100
-                            ).toFixed(0)
-                          : '0'}%
-                      </span>
-                    </div>
-                  </div>
-                </div>                
-              </div>
-
-              {/* Bid Actions */}
-              {isAuctionActive && !isAuctionSeller && (
-                <div className="museum-frame p-6">
-                  <input
-                    value={bidAmount}
-                    onChange={(e) => setBidAmount(e.target.value)}
-                    placeholder="Bid amount (ETH)"
-                    className="w-full bg-black/40 border p-4 rounded"
-                  />
-
-                  <button
-                    onClick={async () => {
-                      const provider = new ethers.BrowserProvider((window as any).ethereum)
-                      const signer = await provider.getSigner()
-
-                      const auctionContract = new ethers.Contract(
-                        (import.meta as any).env.VITE_AUCTION_ADDRESS,
-                        AuctionABI.abi,
-                        signer
-                      )
-
-                      await auctionContract.bid(selectedAuction.id, {
-                        value: ethers.parseEther(bidAmount),
-                      })
-
-                      setBidAmount('')
-                      await loadAuctions()
-                    }}
-                    className="w-full py-4 mt-4 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] rounded font-bold"
-                  >
-                    Place Bid
-                  </button>
-                </div>
-              )}
-
-              {!isAuctionActive && (isAuctionSeller || selectedAuction.highestBid > 0n) && (
-                <button
-                  onClick={async () => {
-                    const provider = new ethers.BrowserProvider((window as any).ethereum)
-                    const signer = await provider.getSigner()
-
-                    const auctionContract = new ethers.Contract(
-                      (import.meta as any).env.VITE_AUCTION_ADDRESS,
-                      AuctionABI.abi,
-                      signer
-                    )
-
-                    await (await auctionContract.settleAuction(selectedAuction.id)).wait()
-                    setSelectedAuction(null)
-                    await loadAuctions()
-                  }}
-                  className="w-full py-4 border rounded"
-                >
-                  Settle Auction
-                </button>
-              )}
+          
 
 
               {loading && (
@@ -394,9 +213,7 @@ export function AuctionsPage({ onNavigate, initialAuction }: AuctionsPageProps) 
                   </div>
                 </div>
               </div>
-            </motion.div>
           </div>
-        </div>
       </div>
     );
   }
@@ -451,8 +268,10 @@ export function AuctionsPage({ onNavigate, initialAuction }: AuctionsPageProps) 
               }}
               onClick={() =>
                 onNavigate('nft-detail', {
-                  collection: auction.nft.collection,
-                  tokenId: auction.nft.tokenId,
+                  nft: {
+                    collection: auction.nft.collection,
+                    tokenId: auction.nft.tokenId,
+                  }                  
                 })
               }
               index={index}

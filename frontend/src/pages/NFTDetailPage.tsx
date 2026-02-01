@@ -71,6 +71,9 @@ export function NFTDetailPage({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collection, tokenId])
 
+  const safeLower = (v?: string) =>
+    typeof v === 'string' ? v.toLowerCase() : ''
+
   async function load() {
     try {
       setLoading(true)
@@ -108,15 +111,25 @@ export function NFTDetailPage({
       let found = null
       const total = await auctionContract.auctionCounter()
 
+      // Inside NFTDetailPage.tsx -> load() function
       for (let i = 1; i <= Number(total); i++) {
-        const a = await auctionContract.auctions(i)
+        const a = await auctionContract.auctions(i);
+        
         if (
-          a.nft.toLowerCase() === collection.toLowerCase() &&
+          safeLower(a.nft) === safeLower(collection) &&
           Number(a.tokenId) === tokenId &&
           !a.settled
         ) {
-          found = { id: i, ...a }
-          break
+          found = {
+            id: i,
+            seller: a.seller,
+            nft: a.nft,
+            tokenId: a.tokenId,
+            endTime: a.endTime,      // Explicitly assigned
+            highestBid: a.highestBid,
+            settled: a.settled
+          };
+          break;
         }
       }
 
@@ -132,7 +145,7 @@ export function NFTDetailPage({
           tokenId,
           ethers.parseEther('1')
         )
-        setArtist(receiver.toLowerCase())
+        setArtist(safeLower(receiver))
       } catch {
         setArtist('')
       }
@@ -156,11 +169,12 @@ export function NFTDetailPage({
       setListing(
         listingData.price > 0n
           ? {
-              seller: listingData.seller.toLowerCase(),
+              seller: safeLower(listingData.seller),
               price: listingData.price,
             }
           : null
       )
+
     } catch (err) {
       console.error('NFT load failed:', err)
     } finally {
@@ -261,9 +275,11 @@ export function NFTDetailPage({
 
       // 1. Approve Auction Contract
       const approved = await nftContract.getApproved(tokenId)
-      if (approved.toLowerCase() !== auctionAddress.toLowerCase()) {
+
+      if (safeLower(approved) !== safeLower(auctionAddress)) {
         await (await nftContract.approve(auctionAddress, tokenId)).wait()
       }
+
 
       // 2. Start Auction (Duration in seconds)
       const durationSec = Number(duration) * 3600
@@ -399,20 +415,27 @@ export function NFTDetailPage({
     )
   }
 
-  const auctionSeller = auction?.seller ? auction.seller.toLowerCase() : null
+  const auctionSeller =
+    auction?.seller && typeof auction.seller === 'string'
+      ? auction.seller.toLowerCase()
+      : null
+
   const isOwner = nft?.owner === user || auctionSeller === user
   const isAuctionSeller = auctionSeller === user
   const isListed = !!listing
   const isSeller = isListed && listing!.seller === user
   const canListAuction = isOwner && !isListed && !auction
-  const isAuctionActive = auction && Date.now() / 1000 < Number(auction.endTime)
 
-  const minBid =
-    auction && auction.highestBid > 0n
-      ? ethers.formatEther(auction.highestBid)
-      : '0'
+  const now = BigInt(Math.floor(Date.now() / 1000)); // Convert now to BigInt for direct comparison
+
+  const isAuctionActive =
+    !!auction &&
+    auction.endTime > 0n &&
+    auction.endTime > now; // Both are now BigInt (seconds)
+
 
   console.log("buttonplay>>>", isSeller, isListed, isOwner, isAuctionSeller);
+  console.log("buttonplay>>>", isAuctionActive, isAuctionSeller);
 
   return (
     <div
