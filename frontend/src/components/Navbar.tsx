@@ -21,9 +21,6 @@ export function Navbar({ onNavigate, currentPage, onSearch }: NavbarProps) {
     { label: 'Auctions', value: 'auctions' },
     { label: 'Artists', value: 'artists' },
     ...(isConnected ? [{ label: 'My NFTs', value: 'my-nfts' }] : []),
-    ...(isConnected ? [
-      { label: 'Create Collection', value: 'create-collection' },
-    ] : []),
   ];
 
   const handleSearch = (e: React.FormEvent) => {
