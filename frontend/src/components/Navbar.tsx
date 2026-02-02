@@ -23,7 +23,6 @@ export function Navbar({ onNavigate, currentPage, onSearch }: NavbarProps) {
     ...(isConnected ? [{ label: 'My NFTs', value: 'my-nfts' }] : []),
     ...(isConnected ? [
       { label: 'Create Collection', value: 'create-collection' },
-      { label: 'Mint NFT', value: 'mint-nft' },
     ] : []),
   ];
 

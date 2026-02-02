@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { motion } from 'motion/react'
 import { ethers } from 'ethers'
-import { Package, TrendingUp, DollarSign } from 'lucide-react'
+import { Package, TrendingUp, DollarSign, Plus } from 'lucide-react'
 
 import FactoryABI from '../abis/CollectionFactory.json'
 import GalleryABI from '../abis/GalleryNFT.json'
@@ -122,7 +122,7 @@ export function MyNFTsPage({ onNavigate }: MyNFTsPageProps) {
               listing.seller.toLowerCase() === user) ||
             (owner === auctionAddress &&
               auctionData?.seller === user)
-              
+
           if (!isOwned) continue
 
           /* Metadata */
@@ -178,7 +178,7 @@ export function MyNFTsPage({ onNavigate }: MyNFTsPageProps) {
 
   return (
     <div
-      className="min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8"
+      className="min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8 relative"
       style={{
         backgroundImage:
           'url(https://images.unsplash.com/photo-1718359760007-4b11d377689c?w=1920)',
@@ -189,18 +189,31 @@ export function MyNFTsPage({ onNavigate }: MyNFTsPageProps) {
     >
       <div className="absolute inset-0 backdrop-blur-sm bg-black/60" />
 
-      <div className="relative z-10 max-w-7xl mx-auto">
-        {/* HEADER */}
+        <div className="relative z-10 max-w-7xl mx-auto">
+          {/* HEADER */}
+          <div className="relative mb-12">
+            {/* Absolute positioned button */}
+            <div className="absolute -top-4 right-0">
+              <button
+                onClick={() => onNavigate('mint-nft')}
+                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] text-[var(--deep-black)] rounded-full font-bold hover:scale-105 active:scale-95 transition-all shadow-lg shadow-[var(--gold)]/20"
+              >
+                <Plus className="w-5 h-5" />
+                <span className="hidden sm:inline">Mint New Artwork</span>
+              </button>
+            </div>
+
+        {/* Title Section */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-12"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
         >
-          <h1 className="mb-4 text-[var(--ivory)]">My Private Gallery</h1>
-          <p className="text-xl text-[var(--champagne)]">
+          <h1 className="mb-2 text-[var(--ivory)] font-serif text-4xl">My Private Gallery</h1>
+          <p className="text-lg text-[var(--champagne)] opacity-80">
             Artworks you own or have listed
           </p>
         </motion.div>
+      </div>
 
         {/* STATS */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
