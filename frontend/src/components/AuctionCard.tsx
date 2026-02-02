@@ -139,14 +139,6 @@ export function AuctionCard({ auction, onClick, index = 0 }: AuctionCardProps) {
                     {auction.highestBidder.slice(-4)}
                 </p>
             )}
-
-             
-            {/* Bid Count */}
-            <div className="pt-3 border-t border-border">
-              <p className="text-xs text-muted-foreground">
-                {(auction.bids?.length || 0)} bid{(auction.bids?.length !== 1) ? 's' : ''} placed
-              </p>
-            </div>
           </div>
         </div>
       </div>
