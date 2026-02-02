@@ -14,7 +14,7 @@ interface ChainAuction {
   tokenId: bigint
   endTime: bigint
   highestBid: bigint
-  highestBidder: bigint
+  highestBidder: string
   settled: boolean
   startPrice: number
   bids: Bid[];
@@ -37,7 +37,7 @@ interface AuctionView {
   }
   seller: string
   highestBid: bigint
-  highestBidder: bigint
+  highestBidder: string
   endTime: bigint
   isActive: boolean
   startPrice: number
@@ -120,7 +120,7 @@ export function AuctionsPage({ onNavigate, initialAuction }: AuctionsPageProps) 
           },
           seller: a.seller.toLowerCase(),
           highestBid: a.highestBid,
-          highestBidder: a.highestBidder,
+          highestBidder: a.highestBidder.toLowerCase(),
           endTime: a.endTime,
           isActive: Date.now() / 1000 < Number(a.endTime),
           startPrice: a.startPrice,
@@ -264,7 +264,7 @@ export function AuctionsPage({ onNavigate, initialAuction }: AuctionsPageProps) 
                   collection: auction.nft.collection,
                 },
                 highestBid: Number(ethers.formatEther(auction.highestBid)),
-                highestBidder: String(ethers.formatEther(auction.highestBidder)),
+                highestBidder: auction.highestBidder,
                 endTime: Number(auction.endTime) * 1000,
                 isActive: auction.isActive,
                 bids: auction.bids || [], 

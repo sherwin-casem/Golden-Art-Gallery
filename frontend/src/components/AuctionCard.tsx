@@ -134,8 +134,9 @@ export function AuctionCard({ auction, onClick, index = 0 }: AuctionCardProps) {
             {auction.highestBidder &&
               auction.highestBidder !== '0x0000000000000000000000000000000000000000' && (
                 <p className="text-sm text-muted-foreground">
-                  Highest Bidder: {auction.highestBidder.slice(0, 6)}…
-                  {auction.highestBidder.slice(-4)}
+                  Highest Bidder:{' '}
+                    {auction.highestBidder.slice(0, 6)}…
+                    {auction.highestBidder.slice(-4)}
                 </p>
             )}
 
