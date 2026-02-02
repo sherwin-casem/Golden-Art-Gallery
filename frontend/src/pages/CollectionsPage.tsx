@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { CollectionCard } from '../components/CollectionCard';
 import { NFTCard } from '../components/NFTCard';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Plus } from 'lucide-react';
 import { ethers } from 'ethers';
 
 import FactoryABI from '../abis/CollectionFactory.json';
@@ -330,6 +330,17 @@ export function CollectionsPage({ onNavigate, initialCollection }: CollectionsPa
       <div className="absolute inset-0 backdrop-blur-sm bg-black/50" />
       
       <div className="relative z-10 max-w-7xl mx-auto">
+        <div className="absolute -top-4 right-0 z-20">
+          <button
+            onClick={() => onNavigate('create-collection')}
+            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] text-[var(--deep-black)] rounded-full font-bold hover:scale-105 active:scale-95 transition-all shadow-lg shadow-[var(--gold)]/20"
+          >
+            <Plus className="w-5 h-5" />
+            <span className="hidden sm:inline">Create Collection</span>
+            <span className="sm:hidden">New</span>
+          </button>
+        </div>
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
