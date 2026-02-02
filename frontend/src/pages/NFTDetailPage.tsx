@@ -129,6 +129,7 @@ export function NFTDetailPage({
             startPrice: a.startPrice,
             endTime: a.endTime,      // Explicitly assigned
             highestBid: a.highestBid,
+            highestBidder: a.highestBidder,
             settled: a.settled
           };
           break;
@@ -443,7 +444,17 @@ export function NFTDetailPage({
     !!auction &&
     auction.endTime > 0n &&
     auction.endTime > now; // Both are now BigInt (seconds)
+  
+  const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
+  const hasBids =
+    auction?.highestBid > 0n &&
+    auction?.highestBidder &&
+    auction.highestBidder !== ZERO_ADDRESS
+
+  const isHighestBidder =
+    hasBids &&
+    auction.highestBidder.toLowerCase() === user
 
   console.log("buttonplay>>>", isSeller, isListed, isOwner, isAuctionSeller);
   console.log("buttonplay>>>", isAuctionActive, isAuctionSeller);
@@ -555,11 +566,25 @@ export function NFTDetailPage({
                 </div>
 
                 <p className="text-3xl text-[var(--gold)]">
-                  {auction.highestBid > 0n
+                  {hasBids
                     ? `${ethers.formatEther(auction.highestBid)} ETH`
-                    : 'No bids yet'}
+                    : `No Bids yet`}
                 </p>
 
+                {hasBids && (
+                  <p className="text-sm text-muted-foreground">
+                    Highest Bidder:{' '}
+                    {auction.highestBidder.slice(0, 6)}…
+                    {auction.highestBidder.slice(-4)}
+                  </p>
+                )}
+
+                {isHighestBidder && (
+                  <p className="text-sm font-bold text-green-400">
+                    🏆 You are currently the highest bidder
+                  </p>
+                )}
+    
                 {auction && isAuctionActive && !isAuctionSeller && (
                   <p className="text-sm text-muted-foreground">
                     Minimum bid:{' '}
@@ -586,8 +611,8 @@ export function NFTDetailPage({
                       />
                       <button
                         onClick={handleBid}
-                        disabled={actionLoading}
-                        className="px-8 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] rounded font-bold"
+                        disabled={actionLoading || isHighestBidder}
+                        className="px-8 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] rounded font-bold disabled:opacity-50"
                       >
                         Bid
                       </button>
