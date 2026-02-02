@@ -12,6 +12,7 @@ export interface AuctionCard {
     artist?: string;        // Used in your hover overlay
   };
   highestBid: number;
+  highestBidder: string;
   startPrice: number;
   endTime: number;
   isActive: boolean;
@@ -130,6 +131,15 @@ export function AuctionCard({ auction, onClick, index = 0 }: AuctionCardProps) {
               </div>
             </div>
 
+            {auction.highestBidder &&
+              auction.highestBidder !== '0x0000000000000000000000000000000000000000' && (
+                <p className="text-sm text-muted-foreground">
+                  Highest Bidder: {auction.highestBidder.slice(0, 6)}…
+                  {auction.highestBidder.slice(-4)}
+                </p>
+            )}
+
+             
             {/* Bid Count */}
             <div className="pt-3 border-t border-border">
               <p className="text-xs text-muted-foreground">

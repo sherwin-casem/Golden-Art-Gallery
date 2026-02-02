@@ -205,13 +205,6 @@ export function CollectionsPage({ onNavigate, initialCollection }: CollectionsPa
     );
   }
 
-  if (!loading && collections.length === 0) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-gray-500">
-        No exhibitions available
-      </div>
-    );
-  }
 
 
   if (selectedCollection) {
@@ -326,6 +319,8 @@ export function CollectionsPage({ onNavigate, initialCollection }: CollectionsPa
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
       }}
+
+      
     >
       <div className="absolute inset-0 backdrop-blur-sm bg-black/50" />
       
@@ -353,17 +348,25 @@ export function CollectionsPage({ onNavigate, initialCollection }: CollectionsPa
         </motion.div>
 
         {/* Collections Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {collections.map((collection, index) => (
-            <CollectionCard
-              key={collection.address}
-              collection={collection}
-              coverImage={collection.coverImage}
-              onClick={() => setSelectedCollection(collection)}
-              index={index}
-            />
-          ))}
+        
+    {!loading && collections.length === 0 ? (
+      <div className="min-h-screen flex items-center justify-center text-gray-500">
+          No exhibitions available
         </div>
+      ) : (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {collections.map((collection, index) => (
+              <CollectionCard
+                key={collection.address}
+                collection={collection}
+                coverImage={collection.coverImage}
+                onClick={() => setSelectedCollection(collection)}
+                index={index}
+              />
+            ))}
+          </div>
+        )   
+    }
       </div>
     </div>
   );
