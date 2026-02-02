@@ -184,6 +184,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
               <CollectionCard
                 key={collection.id}
                 collection={collection}
+                coverImage={collection.coverImage}
                 onClick={() => onNavigate('collection-detail', { collection })}
                 index={index}
               />
