@@ -272,9 +272,6 @@ export function CollectionsPage({ onNavigate, initialCollection }: CollectionsPa
                     </p>
                   </div>
                 </div>
-                <p className="text-sm text-[var(--gold)]">
-                  Curated by {selectedCollection.artistName}
-                </p>
               </div>
             </div>
           </motion.div>    

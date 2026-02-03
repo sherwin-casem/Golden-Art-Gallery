@@ -48,26 +48,54 @@ export function HomePage({ onNavigate }: HomePageProps) {
       
       // Load first 3 collections
       const collectionsData = await Promise.all(
-        addresses.slice(0, 3).map(async (addr) => {
-          const nftContract = new ethers.Contract(addr, GalleryABI.abi, provider);
-          const [name, uri] = await Promise.all([nftContract.name(), nftContract.collectionURI()]);
-          let meta: any = {};
-          if (uri) {
-            try { meta = await fetch(ipfs(uri)).then(r => r.json()); } catch {}
-          }
-          return {
-            id: addr,
-            address: addr,
-            name: name || meta.name,
-            artistName: meta.artistName || 'Unknown',
-            coverImage: meta.banner ? ipfs(meta.banner) : 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800',
-            description: meta.description,
-            nftCount: Number(await nftContract.tokenCounter()),
-            floorPrice: '0.1', // Simplified for home page
-            volume: '1.2'
-          };
-        })
-      );
+  addresses.slice(0, 3).map(async (addr) => {
+    const nftContract = new ethers.Contract(addr, GalleryABI.abi, provider);
+
+    const [name, uri, total] = await Promise.all([
+      nftContract.name(),
+      nftContract.collectionURI(),
+      nftContract.tokenCounter(),
+    ]);
+
+    let meta: any = {};
+    if (uri) {
+      try {
+        meta = await fetch(ipfs(uri)).then(r => r.json());
+      } catch {}
+    }
+
+    let listedCount = 0;
+    let floorPrice = Infinity;
+    let volume = 0;
+
+    for (let tokenId = 1; tokenId <= Number(total); tokenId++) {
+      const listing = await market.listings(addr, tokenId);
+
+      if (listing.price > 0n) {
+        listedCount++;
+        const price = Number(ethers.formatEther(listing.price));
+        volume += price;
+        if (price < floorPrice) floorPrice = price;
+      }
+    }
+
+    return {
+      id: addr,
+      address: addr,
+      name: name || meta.name,
+      artistName: meta.artistName || 'Unknown',
+      description: meta.description || '',
+      coverImage: meta.banner
+        ? ipfs(meta.banner)
+        : 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800',
+
+      nftCount: listedCount,                         
+      floorPrice: floorPrice === Infinity ? 0 : floorPrice, 
+      volume: volume,                               
+    };
+  })
+);
+
       setFeaturedCollections(collectionsData);
 
       // Load some listed NFTs from the first collection for "Featured"
