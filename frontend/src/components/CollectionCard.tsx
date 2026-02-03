@@ -39,8 +39,7 @@ export function CollectionCard({ collection, onClick, index = 0 }: CollectionCar
                 <p className="text-sm text-[var(--champagne)] mb-3 line-clamp-2">
                   {collection.description}
                 </p>
-                <p className="text-xs text-[var(--gold)]">by {collection.artistName}</p>
-              </div>
+                </div>
             </div>
           </div>
         </div>
