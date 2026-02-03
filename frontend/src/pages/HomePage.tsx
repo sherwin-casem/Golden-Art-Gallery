@@ -231,8 +231,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 collection={collection}
                 coverImage={collection.coverImage}
                 index={index}
-                onClick={() => onNavigate('collection-detail', { collection: collection.address })}
-                />
+                onClick={() =>  onNavigate('collections', { collection })}  />
             ))}
           </div>
         </div>
