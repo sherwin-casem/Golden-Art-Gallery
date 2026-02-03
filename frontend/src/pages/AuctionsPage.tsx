@@ -56,8 +56,6 @@ export function AuctionsPage({ onNavigate, initialAuction }: AuctionsPageProps) 
   const [selectedAuction, setSelectedAuction] = useState<AuctionView | null>(
     initialAuction || null
   );
-  const [bidAmount, setBidAmount] = useState('');
-  const { userType } = useWallet();
   const [auctions, setAuctions] = useState<AuctionView[]>([])
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState('')

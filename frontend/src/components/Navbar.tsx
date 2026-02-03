@@ -10,7 +10,7 @@ interface NavbarProps {
 }
 
 export function Navbar({ onNavigate, currentPage, onSearch }: NavbarProps) {
-  const { isConnected, address, userType, disconnect, connect } = useWallet();
+  const { isConnected, address, disconnect, connect } = useWallet();
   const [searchQuery, setSearchQuery] = useState('');
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -108,11 +108,7 @@ export function Navbar({ onNavigate, currentPage, onSearch }: NavbarProps) {
                       exit={{ opacity: 0, y: -10 }}
                       className="absolute right-0 top-full mt-2 w-48 museum-frame p-2"
                     >
-                      <div className="px-3 py-2 border-b border-border mb-2">
-                        <p className="text-xs text-muted-foreground uppercase">Role</p>
-                        <p className="text-sm text-[var(--gold)] capitalize">{userType}</p>
-                      </div>
-                      <button
+                                           <button
                         onClick={() => {
                           onNavigate('my-nfts');
                           setShowUserMenu(false);
