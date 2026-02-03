@@ -84,6 +84,7 @@ function App() {
               initialCollection={pageData.collection}
             />
           )}
+                    
           
           {currentPage === 'nft-detail' && pageData.nft && (
             <NFTDetailPage

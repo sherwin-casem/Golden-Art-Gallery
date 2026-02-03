@@ -200,11 +200,11 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 <NFTCard
                   key={nft.id}
                   nft={nft}
-                  onClick={() => onNavigate('nft-detail', { collection: nft.collection, tokenId: nft.tokenId })}
+                  onClick={() => onNavigate('nft-detail', { nft: nft })}
                   index={index}
-                />
+                />  
               ))}
-            </div>
+            </div>  
           </div>
         </section>
       )}
@@ -230,9 +230,9 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 key={collection.id}
                 collection={collection}
                 coverImage={collection.coverImage}
-                onClick={() => onNavigate('collection-detail', { collection: collection.address })}
                 index={index}
-              />
+                onClick={() => onNavigate('collection-detail', { collection: collection.address })}
+                />
             ))}
           </div>
         </div>
