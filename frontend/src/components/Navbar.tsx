@@ -28,8 +28,10 @@ export function Navbar({ onNavigate, currentPage, onSearch }: NavbarProps) {
     onSearch(searchQuery);
   };
 
-    const truncateAddress = (addr: string) => 
-    `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+    const truncateAddress = (addr: string | null) => {
+    if (!addr) return '';
+    return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-40 bg-[var(--deep-black)]/80 backdrop-blur-xl border-b border-[var(--border)]">
