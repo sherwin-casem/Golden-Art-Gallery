@@ -29,104 +29,121 @@ export function HomePage({ onNavigate }: HomePageProps) {
 
   async function loadFeaturedContent() {
     try {
-      setLoading(true);
-      if (!(window as any).ethereum) return;
-      
-      const provider = new ethers.BrowserProvider((window as any).ethereum);
+      if (!(window as any).ethereum) return
+      setLoading(true)
+
+      const provider = new ethers.BrowserProvider((window as any).ethereum)
+
       const factory = new ethers.Contract(
         (import.meta as any).env.VITE_FACTORY_ADDRESS,
         FactoryABI.abi,
         provider
-      );
+      )
+
       const market = new ethers.Contract(
         (import.meta as any).env.VITE_MARKETPLACE_ADDRESS,
         MarketplaceABI.abi,
         provider
-      );
+      )
 
-      const addresses: string[] = await factory.getAllCollections();
-      
-      // Load first 3 collections
-      const collectionsData = await Promise.all(
-  addresses.slice(0, 3).map(async (addr) => {
-    const nftContract = new ethers.Contract(addr, GalleryABI.abi, provider);
+      const collectionAddresses: string[] =
+        await factory.getAllCollections()
 
-    const [name, uri, total] = await Promise.all([
-      nftContract.name(),
-      nftContract.collectionURI(),
-      nftContract.tokenCounter(),
-    ]);
+      const collections: any[] = []
+      const allNFTs: any[] = []
 
-    let meta: any = {};
-    if (uri) {
-      try {
-        meta = await fetch(ipfs(uri)).then(r => r.json());
-      } catch {}
-    }
+      for (const addr of collectionAddresses) {
+        const nftContract = new ethers.Contract(
+          addr,
+          GalleryABI.abi,
+          provider
+        )
 
-    let listedCount = 0;
-    let floorPrice = Infinity;
-    let volume = 0;
+        const [name, uri, totalSupply] = await Promise.all([
+          nftContract.name(),
+          nftContract.collectionURI(),
+          nftContract.tokenCounter(),
+        ])
 
-    for (let tokenId = 1; tokenId <= Number(total); tokenId++) {
-      const listing = await market.listings(addr, tokenId);
-
-      if (listing.price > 0n) {
-        listedCount++;
-        const price = Number(ethers.formatEther(listing.price));
-        volume += price;
-        if (price < floorPrice) floorPrice = price;
-      }
-    }
-
-    return {
-      id: addr,
-      address: addr,
-      name: name || meta.name,
-      description: meta.description || '',
-      coverImage: meta.banner
-        ? ipfs(meta.banner)
-        : 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800',
-      nftCount: listedCount,                         
-      floorPrice: floorPrice === Infinity ? 0 : floorPrice, 
-      volume: volume,                               
-    };
-  })
-);
-
-      setFeaturedCollections(collectionsData);
-
-      // Load some listed NFTs from the first collection for "Featured"
-      if (addresses.length > 0) {
-        const firstAddr = addresses[0];
-        const nftContract = new ethers.Contract(firstAddr, GalleryABI.abi, provider);
-        const total = Math.min(Number(await nftContract.tokenCounter()), 4);
-        const nfts = [];
-
-        for (let i = 1; i <= total; i++) {
-          const listing = await market.listings(firstAddr, i);
-          if (listing.price > 0n) {
-            const uri = await nftContract.tokenURI(i);
-            const meta = await fetch(ipfs(uri)).then(r => r.json());
-            nfts.push({
-              id: `${firstAddr}-${i}`,
-              collection: firstAddr,
-              tokenId: i,
-              name: meta.name,
-              image: ipfs(meta.image),
-              price: ethers.formatEther(listing.price),
-              collectionName: collectionsData[0]?.name || 'Collection',
-              isListed: true
-            });
-          }
+        let meta: any = {}
+        if (uri) {
+          try {
+            meta = await fetch(ipfs(uri)).then((r) => r.json())
+          } catch {}
         }
-        setFeaturedNFTs(nfts);
+
+        let floorPrice = Infinity
+        let volume = 0
+        let listedCount = 0
+
+        for (let tokenId = 1; tokenId <= Number(totalSupply); tokenId++) {
+          const listing = await market.listings(addr, tokenId)
+          if (listing.price === 0n) continue
+
+          const price = Number(ethers.formatEther(listing.price))
+          volume += price
+          listedCount++
+          if (price < floorPrice) floorPrice = price
+
+          const tokenURI = await nftContract.tokenURI(tokenId)
+          const tokenMeta = await fetch(ipfs(tokenURI)).then((r) => r.json())
+
+          allNFTs.push({
+            id: `${addr}-${tokenId}`,
+            collection: addr,
+            tokenId,
+            name: tokenMeta.name,
+            image: ipfs(tokenMeta.image),
+            price,
+            isListed: true,
+            collectionName: name,
+            collectionVolume: volume,
+            collectionFloor: floorPrice === Infinity ? 0 : floorPrice,
+          })
+        }
+
+        collections.push({
+          id: addr,
+          address: addr,
+          name: name || meta.name,
+          description: meta.description || '',
+          coverImage:
+            meta.banner
+              ? ipfs(meta.banner)
+              : 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800',
+          nftCount: listedCount,
+          floorPrice: floorPrice === Infinity ? 0 : floorPrice,
+          volume,
+        })
       }
+
+      // 🔥 Sort collections by volume
+      collections.sort((a, b) => b.volume - a.volume)
+      setFeaturedCollections(collections.slice(0, 3))
+
+      // 🔥 Sort NFTs: hot collections first, then lowest price
+      const featured = allNFTs
+        .sort(
+          (a, b) =>
+            b.collectionVolume - a.collectionVolume ||
+            a.price - b.price
+        )
+        .slice(0, 4)
+
+      setFeaturedNFTs(featured)
     } catch (err) {
-      console.error("Failed to load home page content", err);
+      console.error('HomePage load failed:', err)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-gray-400">
+        Loading gallery…
+      </div>
+    )
   }
 
   return (
