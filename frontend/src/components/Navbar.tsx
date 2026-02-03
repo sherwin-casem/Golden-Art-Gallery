@@ -19,7 +19,6 @@ export function Navbar({ onNavigate, currentPage, onSearch }: NavbarProps) {
     { label: 'Home', value: 'home' },
     { label: 'Collections', value: 'collections' },
     { label: 'Auctions', value: 'auctions' },
-    { label: 'Artists', value: 'artists' },
     ...(isConnected ? [{ label: 'My NFTs', value: 'my-nfts' }] : []),
   ];
 
