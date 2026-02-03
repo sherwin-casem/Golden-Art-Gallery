@@ -15,21 +15,26 @@ interface WalletContextType {
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
 export function WalletProvider({ children }: { children: React.ReactNode }) {
-  const { address, isConnected } = useAccount();
+  const { address, isConnected, status } = useAccount();
   const { connect } = useConnect();
   const { disconnect } = useDisconnect();
   
   const [userType, setUserType] = useState<'artist' | 'collector' | null>(null);
   const [showConnectModal, setShowConnectModal] = useState(false);
 
+  const [mounted, setMounted] = useState(false); 
+
   useEffect(() => {
-    if (isConnected && !userType) {
-      // Logic to determine user type (e.g., fetching from an API or checking NFT ownership)
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+     if (mounted && isConnected && status === 'connected' && !userType) {
       setUserType('collector'); 
     } else if (!isConnected) {
       setUserType(null);
     }
-  }, [isConnected]);
+  }, [isConnected, status, mounted]);
 
   const handleConnect = () => {
     connect({ connector: injected() });
