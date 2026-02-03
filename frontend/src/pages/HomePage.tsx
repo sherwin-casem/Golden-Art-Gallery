@@ -83,12 +83,10 @@ export function HomePage({ onNavigate }: HomePageProps) {
       id: addr,
       address: addr,
       name: name || meta.name,
-      artistName: meta.artistName || 'Unknown',
       description: meta.description || '',
       coverImage: meta.banner
         ? ipfs(meta.banner)
         : 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800',
-
       nftCount: listedCount,                         
       floorPrice: floorPrice === Infinity ? 0 : floorPrice, 
       volume: volume,                               
@@ -116,7 +114,6 @@ export function HomePage({ onNavigate }: HomePageProps) {
               tokenId: i,
               name: meta.name,
               image: ipfs(meta.image),
-              artist: meta.attributes?.[0]?.value || 'Unknown',
               price: ethers.formatEther(listing.price),
               collectionName: collectionsData[0]?.name || 'Collection',
               isListed: true
