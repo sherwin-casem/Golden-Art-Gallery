@@ -68,6 +68,28 @@ export function SearchPage({ query, onNavigate }: SearchPageProps) {
           meta = uri ? await fetch(ipfs(uri)).then(r => r.json()) : {};
         } catch {}
 
+        let floorPrice = Infinity;
+            let listedCount = 0;
+            let volume = 0;
+            
+            for (let tokenId = 1; tokenId <= total; tokenId++) {
+                const listing = await market.listings(addr, tokenId);
+            
+                if (listing.price > 0n) {
+                listedCount++;
+            
+                const price = Number(
+                    ethers.formatEther(listing.price)
+                );
+            
+                volume += price;
+            
+                if (price < floorPrice) {
+                    floorPrice = price;
+                }
+                }
+            }
+
         /* COLLECTION MATCH */
         if (
           name?.toLowerCase().includes(q) ||
@@ -78,6 +100,10 @@ export function SearchPage({ query, onNavigate }: SearchPageProps) {
             name,
             description: meta.description || '',
             coverImage: meta.banner ? ipfs(meta.banner) : '',
+            nftCount: listedCount, // only listed NFTs
+            floorPrice: floorPrice === Infinity ? 0 : floorPrice, //  live floor
+            artistName: meta.artistName,
+            volume: volume,
           });
         }
 
@@ -176,7 +202,7 @@ export function SearchPage({ query, onNavigate }: SearchPageProps) {
             {showNFTs && nfts.length > 0 && (
               <>
                 <h2 className="mb-4">NFTs</h2>
-                <div className="grid md:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                   {nfts.map((nft, i) => (
                     <NFTCard
                       key={nft.id}
