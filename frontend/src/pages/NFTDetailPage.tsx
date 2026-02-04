@@ -461,7 +461,7 @@ export function NFTDetailPage({
 
   return (
     <div
-      className="min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8"
+      className="relative min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8 "
       style={{
         backgroundImage:
           'url(https://images.unsplash.com/photo-1687676627083-e7df45578c8a?w=1920)',
@@ -663,22 +663,6 @@ export function NFTDetailPage({
               </button>
             )}
 
-              <button
-                onClick={() => setLiked(!liked)}
-                className="px-4 py-4 border rounded"
-              >
-                <Heart
-                  className={
-                    liked
-                      ? 'fill-red-500 text-red-500'
-                      : 'text-muted-foreground'
-                  }
-                />
-              </button>
-
-              <button className="px-4 py-4 border rounded">
-                <Share2 />
-              </button>
             </div>
 
             {/* Blockchain */}

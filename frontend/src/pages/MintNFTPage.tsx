@@ -189,7 +189,7 @@ export function MintNFTPage({ onNavigate }: { onNavigate: (page: string) => void
 
   return (
     <div
-      className="min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8"
+      className="relative min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8"
       style={{
         backgroundImage: 'url(https://images.unsplash.com/photo-1718359760007-4b11d377689c?w=1920)',
         backgroundSize: 'cover',

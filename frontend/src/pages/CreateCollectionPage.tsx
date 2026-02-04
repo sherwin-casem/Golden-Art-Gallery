@@ -127,7 +127,7 @@ export function CreateCollectionPage({ onNavigate }: CreateCollectionPageProps) 
 
   return (
     <div
-      className="min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8"
+      className="relative min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8"
       style={{
         backgroundImage: 'url(https://images.unsplash.com/photo-1718359760007-4b11d377689c?w=1920)',
         backgroundSize: 'cover',
@@ -145,7 +145,7 @@ export function CreateCollectionPage({ onNavigate }: CreateCollectionPageProps) 
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h1 className="mb-4 text-[var(--ivory)]">Create New Collection</h1>
+          <h1 className="text-4xl mb-4 text-[var(--ivory)]">Create New Collection</h1>
           <p className="text-xl text-[var(--champagne)]">
             Curate a new exhibition for your digital masterpieces
           </p>
@@ -201,7 +201,7 @@ export function CreateCollectionPage({ onNavigate }: CreateCollectionPageProps) 
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
-                      className="absolute top-2 right-2 px-3 py-1 bg-black/80 text-white text-sm rounded hover:bg-black transition-colors"
+                      className="cursor-pointer absolute top-2 right-2 px-3 py-3 bg-black/80 text-white text-sm rounded hover:bg-black transition-colors"
                     >
                       Change
                     </button>
@@ -210,7 +210,7 @@ export function CreateCollectionPage({ onNavigate }: CreateCollectionPageProps) 
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="w-full aspect-video border-2 border-dashed border-[var(--border)] rounded flex flex-col items-center justify-center gap-4 hover:border-[var(--gold)] transition-colors group"
+                    className="cursor-pointer w-full aspect-video border-2 border-dashed border-[var(--border)] rounded flex flex-col items-center justify-center gap-4 hover:border-[var(--gold)] transition-colors group"
                   >
                     <Upload className="w-12 h-12 text-muted-foreground group-hover:text-[var(--gold)] transition-colors" />
                     <div className="text-center">
@@ -228,14 +228,14 @@ export function CreateCollectionPage({ onNavigate }: CreateCollectionPageProps) 
                 <button
                   type="button"
                   onClick={() => setPreview(!preview)}
-                  className="flex-1 px-6 py-4 border-2 border-[var(--gold)] text-[var(--gold)] rounded hover-glow transition-all duration-400"
+                  className="cursor-pointer flex-1 px-6 py-4 border-2 border-[var(--gold)] text-[var(--gold)] rounded hover-glow transition-all duration-400"
                 >
                   {preview ? 'Edit' : 'Preview'}
                 </button>
                 <button
                   type="submit"
                   disabled={!formData.name || !formData.description || !formData.coverFile}
-                  className="flex-1 px-6 py-4 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] text-[var(--deep-black)] rounded hover-lift transition-all duration-400 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="cursor-pointer flex-1 px-6 py-4 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] text-[var(--deep-black)] rounded hover-lift transition-all duration-400 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Create Collection
                 </button>

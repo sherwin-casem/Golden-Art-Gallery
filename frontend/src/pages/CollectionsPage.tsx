@@ -345,7 +345,7 @@ export function CollectionsPage({ onNavigate, initialCollection }: CollectionsPa
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
         >
-          <h1 className="mb-4 text-[var(--ivory)]">Exhibition Halls</h1>
+          <h1 className="text-5xl mb-4 text-[var(--ivory)]">Exhibition Halls</h1>
           <p className="text-xl text-[var(--champagne)] max-w-2xl mx-auto">
             Explore curated collections from the world's finest digital artists
           </p>
