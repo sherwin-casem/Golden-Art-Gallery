@@ -15,7 +15,7 @@ import { AuctionsPage } from './pages/AuctionsPage';
 import { SearchPage } from './pages/searchPage';
 import './styles/globals.css';
 
-type Page = 'home' | 'collections' | 'nft-detail' | 'collection-detail' | 'my-nfts' | 'create-collection' | 'mint-nft' | 'auctions' | 'auction-detail' | 'artists' | 'artist-detail';
+type Page = 'home' | 'collections' | 'nft-detail' | 'collection-detail' | 'my-nfts' | 'create-collection' | 'mint-nft' | 'auctions' | 'auction-detail' |'search';
 
 interface PageData {
   nft?: any;
