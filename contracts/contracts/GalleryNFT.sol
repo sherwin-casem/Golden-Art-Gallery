@@ -50,11 +50,9 @@ contract GalleryNFT is ERC721, IERC2981, Ownable {
     /* =========================
        MINT
     ========================== */
-    function mint(string calldata tokenURI)
-        external
-        payable
-        returns (uint256)
-    {
+     function mint(
+        string calldata _tokenURI
+    ) external payable returns (uint256) {
         require(msg.value == mintFee, "Wrong mint fee");
 
         (bool sent, ) = platform.call{value: msg.value}("");
@@ -64,7 +62,7 @@ contract GalleryNFT is ERC721, IERC2981, Ownable {
         uint256 tokenId = _tokenIds.current();
 
         _safeMint(msg.sender, tokenId);
-        _tokenURIs[tokenId] = tokenURI;
+        _tokenURIs[tokenId] = _tokenURI;
         _artist[tokenId] = msg.sender;
 
         return tokenId;
