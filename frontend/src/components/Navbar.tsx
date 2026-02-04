@@ -108,16 +108,6 @@ export function Navbar({ onNavigate, currentPage, onSearch }: NavbarProps) {
                       exit={{ opacity: 0, y: -10 }}
                       className="absolute right-0 top-full mt-2 w-48 museum-frame p-2"
                     >
-                                           <button
-                        onClick={() => {
-                          onNavigate('my-nfts');
-                          setShowUserMenu(false);
-                        }}
-                        className="w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-[var(--muted)] rounded transition-colors"
-                      >
-                        <User className="w-4 h-4" />
-                        My Profile
-                      </button>
                       <button
                         onClick={() => {
                           disconnect();
