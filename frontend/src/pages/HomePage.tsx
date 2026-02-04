@@ -212,14 +212,14 @@ export function HomePage({ onNavigate }: HomePageProps) {
           >
             <button
               onClick={() => onNavigate('collections')}
-              className="px-8 py-4 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] text-[var(--deep-black)] rounded hover-lift flex items-center gap-3 transition-all font-bold"
+              className="cursor-pointer px-8 py-4 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] text-[var(--deep-black)] rounded hover-lift flex items-center gap-3 transition-all font-bold"
             >
               <span>Enter Gallery</span>
               <ArrowRight className="w-5 h-5" />
             </button>
             <button
               onClick={() => onNavigate('auctions')}
-              className="px-8 py-4 border-2 border-[var(--gold)] text-[var(--gold)] rounded hover-glow transition-all flex items-center gap-2"
+              className="cursor-pointer px-8 py-4 border-2 border-[var(--gold)] text-[var(--gold)] rounded hover-glow transition-all flex items-center gap-2"
             >
               <Gavel className="w-5 h-5" />
               Live Auctions
@@ -290,14 +290,14 @@ export function HomePage({ onNavigate }: HomePageProps) {
             {!isConnected ? (
               <button
                 onClick={connect}
-                className="px-8 py-4 bg-[var(--gold)] text-[var(--deep-black)] rounded-full font-bold hover:scale-105 transition-transform"
+                className="cursor-pointer px-8 py-4 bg-[var(--gold)] text-[var(--deep-black)] rounded-full font-bold hover:scale-105 transition-transform"
               >
                 Connect Wallet
               </button>
             ) : (
               <button
                 onClick={() => onNavigate('mint-nft')}
-                className="px-8 py-4 bg-[var(--gold)] text-[var(--deep-black)] rounded-full font-bold hover:scale-105 transition-transform"
+                className="cursor-pointer px-8 py-4 bg-[var(--gold)] text-[var(--deep-black)] rounded-full font-bold hover:scale-105 transition-transform"
               >
                 Mint Artwork
               </button>

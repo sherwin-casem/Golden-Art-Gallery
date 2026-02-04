@@ -476,7 +476,7 @@ export function NFTDetailPage({
         {/* Back */}
         <motion.button
           onClick={onBack}
-          className="flex items-center gap-2 text-[var(--gold)] mb-8"
+          className="cursor-pointer flex items-center gap-2 text-[var(--gold)] mb-8"
         >
           <ArrowLeft className="w-5 h-5" />
           Back
@@ -528,7 +528,7 @@ export function NFTDetailPage({
             {/* Actions */}
             <div className="space-y-4">
               {!isSeller && isListed && (
-                <button onClick={handleBuy} className="w-full py-4 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] rounded font-bold">
+                <button onClick={handleBuy} className="cursor-pointer w-full py-4 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] rounded font-bold">
                   Purchase for {ethers.formatEther(listing!.price)} ETH
                 </button>
               )}
@@ -549,7 +549,7 @@ export function NFTDetailPage({
                 <button 
                   onClick={handleList} 
                   disabled={actionLoading}
-                  className="w-full py-4 bg-[var(--gold)] text-black rounded font-bold flex items-center justify-center gap-2"
+                  className="cursor-pointer w-full py-4 bg-[var(--gold)] text-black rounded font-bold flex items-center justify-center gap-2"
                 >                  
                   List for Sale
                 </button>
@@ -597,7 +597,7 @@ export function NFTDetailPage({
                     <button
                       onClick={handleCancelAuction}
                       disabled={actionLoading}
-                      className="w-full py-4 border-2 border-red-500/50 text-red-500 rounded font-bold hover:bg-red-500/10"
+                      className="cursor-pointer w-full py-4 border-2 border-red-500/50 text-red-500 rounded font-bold hover:bg-red-500/10"
                     >
                       Cancel Auction
                     </button>
@@ -612,7 +612,7 @@ export function NFTDetailPage({
                       <button
                         onClick={handleBid}
                         disabled={actionLoading || isHighestBidder}
-                        className="px-8 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] rounded font-bold disabled:opacity-50"
+                        className="cursor-pointer px-8 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] rounded font-bold disabled:opacity-50"
                       >
                         Bid
                       </button>
@@ -622,7 +622,7 @@ export function NFTDetailPage({
                   <button
                     onClick={handleSettleAuction}
                     disabled={actionLoading}
-                    className="w-full py-4 bg-[var(--gold)] text-black rounded font-bold"
+                    className="cursor-pointer w-full py-4 bg-[var(--gold)] text-black rounded font-bold"
                   >
                     Settle Auction
                   </button>
@@ -648,7 +648,7 @@ export function NFTDetailPage({
 
                 <button
                   onClick={handleCreateAuction}
-                  className="w-full py-4 bg-[var(--gold)] text-black rounded font-bold flex items-center justify-center gap-2"
+                  className="cursor-pointer w-full py-4 bg-[var(--gold)] text-black rounded font-bold flex items-center justify-center gap-2"
                 >
                   Start Auction
                 </button>
@@ -658,7 +658,7 @@ export function NFTDetailPage({
 
               {/* 3. OWNER/SELLER VIEW: Already listed */}
             {isSeller && (
-              <button onClick={handleCancel} className="w-full py-4 border-2 border-red-500/50 text-red-500 rounded font-bold hover:bg-red-500/10">
+              <button onClick={handleCancel} className="cursor-pointer w-full py-4 border-2 border-red-500/50 text-red-500 rounded font-bold hover:bg-red-500/10">
                 Cancel Listing ({ethers.formatEther(listing!.price)} ETH)
               </button>
             )}

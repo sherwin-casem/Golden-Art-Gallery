@@ -39,7 +39,7 @@ export function Navbar({ onNavigate, currentPage, onSearch }: NavbarProps) {
           {/* Logo */}
           <button
             onClick={() => onNavigate('home')}
-            className="flex items-center gap-3 group"
+            className="cursor-pointer flex items-center gap-3 group"
           >
             <div className="w-10 h-10 rounded bg-gradient-to-br from-[var(--gold)] to-[var(--antique-brass)] flex items-center justify-center group-hover:shadow-lg group-hover:shadow-[var(--gold-glow)] transition-shadow duration-300">
               <span className="text-[var(--deep-black)] font-bold text-lg">A</span>
@@ -53,7 +53,7 @@ export function Navbar({ onNavigate, currentPage, onSearch }: NavbarProps) {
               <button
                 key={item.value}
                 onClick={() => onNavigate(item.value)}
-                className={`relative py-2 transition-colors duration-300 ${
+                className={`cursor-pointer relative py-2 transition-colors duration-300 ${
                   currentPage === item.value
                     ? 'text-[var(--gold)]'
                     : 'text-[var(--ivory)] hover:text-[var(--gold)]'
@@ -91,7 +91,7 @@ export function Navbar({ onNavigate, currentPage, onSearch }: NavbarProps) {
               <div className="relative">
                 <button
                   onClick={() => setShowUserMenu(!showUserMenu)}
-                  className="flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] text-[var(--deep-black)] rounded hover-glow transition-all duration-300"
+                  className="cursor-pointer flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] text-[var(--deep-black)] rounded hover-glow transition-all duration-300"
                 >
                   <Wallet className="w-4 h-4" />
                   <span className="hidden sm:inline text-sm font-medium">
@@ -113,7 +113,7 @@ export function Navbar({ onNavigate, currentPage, onSearch }: NavbarProps) {
                           disconnect();
                           setShowUserMenu(false);
                         }}
-                        className="w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-[var(--muted)] rounded transition-colors text-destructive"
+                        className="cursor-pointer w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-[var(--muted)] rounded transition-colors text-destructive"
                       >
                         <LogOut className="w-4 h-4" />
                         Disconnect
@@ -134,7 +134,7 @@ export function Navbar({ onNavigate, currentPage, onSearch }: NavbarProps) {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setShowMobileMenu(!showMobileMenu)}
-              className="lg:hidden text-[var(--ivory)] hover:text-[var(--gold)] transition-colors"
+              className="cursor-pointer lg:hidden text-[var(--ivory)] hover:text-[var(--gold)] transition-colors"
             >
               {showMobileMenu ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>

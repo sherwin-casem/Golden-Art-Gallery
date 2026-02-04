@@ -259,14 +259,14 @@ export function MintNFTPage({ onNavigate }: { onNavigate: (page: string) => void
             <img src={formData.image} alt="Preview" className="w-full h-full object-cover" />
           </div>
           <div className="flex gap-4">
-            <button onClick={triggerFileInput} className="flex-1 px-6 py-3 border border-[var(--gold)] text-[var(--gold)] rounded transition-colors">Change Image</button>
-            <button onClick={() => setStep(2)} className="flex-1 px-6 py-3 bg-[var(--gold)] text-black rounded font-bold">Next Step</button>
+            <button onClick={triggerFileInput} className="cursor-pointer flex-1 px-6 py-3 border border-[var(--gold)] text-[var(--gold)] rounded transition-colors">Change Image</button>
+            <button onClick={() => setStep(2)} className="cursor-pointer flex-1 px-6 py-3 bg-[var(--gold)] text-black rounded font-bold">Next Step</button>
           </div>
         </div>
       ) : (
         <button
           onClick={triggerFileInput}
-          className="w-full aspect-square border-2 border-dashed border-white/20 rounded flex flex-col items-center justify-center gap-4 hover:border-[var(--gold)] transition-all"
+          className="cursor-pointer w-full aspect-square border-2 border-dashed border-white/20 rounded flex flex-col items-center justify-center gap-4 hover:border-[var(--gold)] transition-all"
         >
           <Upload className="w-12 h-12 text-white/40" />
           <p className="text-white/60">Drop your artwork here or click to browse</p>
@@ -320,14 +320,14 @@ export function MintNFTPage({ onNavigate }: { onNavigate: (page: string) => void
                   <div className="flex gap-4">
                     <button
                       onClick={() => setStep(1)}
-                      className="px-6 py-3 border-2 border-[var(--border)] text-[var(--ivory)] rounded hover:border-[var(--gold)] transition-colors flex items-center gap-2"
+                      className="cursor-pointer px-6 py-3 border-2 border-[var(--border)] text-[var(--ivory)] rounded hover:border-[var(--gold)] transition-colors flex items-center gap-2"
                     >
                       <ArrowLeft className="w-4 h-4" /> Back
                     </button>
                     <button
                       onClick={() => setStep(3)}
                       disabled={!formData.name || !formData.description || !formData.artist}
-                      className="flex-1 px-6 py-3 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] text-[var(--deep-black)] rounded hover-lift transition-all duration-400 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="cursor-pointer flex-1 px-6 py-3 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] text-[var(--deep-black)] rounded hover-lift transition-all duration-400 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Next <ArrowRight className="w-4 h-4" />
                     </button>
@@ -351,7 +351,7 @@ export function MintNFTPage({ onNavigate }: { onNavigate: (page: string) => void
                         <button
                           key={collection.address}
                           onClick={() => setFormData({ ...formData, collectionId: collection.address})}
-                          className={`w-full p-4 rounded border-2 transition-all duration-300 text-left ${
+                          className={`cursor-pointer w-full p-4 rounded border-2 transition-all duration-300 text-left ${
                             formData.collectionId === collection.address
                               ? 'border-[var(--gold)] bg-[var(--gold)]/10'
                               : 'border-[var(--border)] hover:border-[var(--gold)]/50'
@@ -381,16 +381,16 @@ export function MintNFTPage({ onNavigate }: { onNavigate: (page: string) => void
                   <div className="flex gap-4">
                     <button
                       onClick={() => setStep(2)}
-                      className="px-6 py-3 border-2 border-[var(--border)] text-[var(--ivory)] rounded hover:border-[var(--gold)] transition-colors flex items-center gap-2"
+                      className="cursor-pointer px-6 py-3 border-2 border-[var(--border)] text-[var(--ivory)] rounded hover:border-[var(--gold)] transition-colors flex items-center gap-2"
                     >
                       <ArrowLeft className="w-4 h-4" /> Back
                     </button>
                     <button
                       onClick={() => setStep(4)}
                       disabled={!formData.collectionId}
-                      className="flex-1 px-6 py-3 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] text-[var(--deep-black)] rounded hover-lift transition-all duration-400 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="cursor-pointer flex-1 px-6 py-3 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] text-[var(--deep-black)] rounded hover-lift transition-all duration-400 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      Preview <ArrowRight className="w-4 h-4" />
+                      Next <ArrowRight className="w-4 h-4" />
                     </button>
                   </div>
                 </motion.div>
@@ -430,13 +430,13 @@ export function MintNFTPage({ onNavigate }: { onNavigate: (page: string) => void
                   <div className="flex gap-4">
                     <button
                       onClick={() => setStep(3)}
-                      className="px-6 py-3 border-2 border-[var(--border)] text-[var(--ivory)] rounded hover:border-[var(--gold)] transition-colors flex items-center gap-2"
+                      className="cursor-pointer px-6 py-3 border-2 border-[var(--border)] text-[var(--ivory)] rounded hover:border-[var(--gold)] transition-colors flex items-center gap-2"
                     >
                       <ArrowLeft className="w-4 h-4" /> Back
                     </button>
                     <button
                       onClick={handleMint} disabled={loading}
-                      className="flex-1 px-6 py-4 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] text-[var(--deep-black)] rounded hover-lift transition-all duration-400"
+                      className="cursor-pointer flex-1 px-6 py-4 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] text-[var(--deep-black)] rounded hover-lift transition-all duration-400"
                     >
                       Mint NFT
                     </button>

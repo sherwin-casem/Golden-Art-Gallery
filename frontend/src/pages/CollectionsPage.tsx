@@ -235,7 +235,7 @@ export function CollectionsPage({ onNavigate, initialCollection }: CollectionsPa
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4 }}
             onClick={() => setSelectedCollection(null)}
-            className="flex items-center gap-2 text-[var(--gold)] hover:text-[var(--antique-brass)] mb-8 transition-colors"
+            className="cursor-pointer flex items-center gap-2 text-[var(--gold)] hover:text-[var(--antique-brass)] mb-8 transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
             Back to Collections
@@ -332,7 +332,7 @@ export function CollectionsPage({ onNavigate, initialCollection }: CollectionsPa
         <div className="absolute -top-4 right-0 z-20">
           <button
             onClick={() => onNavigate('create-collection')}
-            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] text-[var(--deep-black)] rounded-full font-bold hover:scale-105 active:scale-95 transition-all shadow-lg shadow-[var(--gold)]/20"
+            className="cursor-pointer flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] text-[var(--deep-black)] rounded-full font-bold hover:scale-105 active:scale-95 transition-all shadow-lg shadow-[var(--gold)]/20"
           >
             <Plus className="w-5 h-5" />
             <span className="hidden sm:inline">Create Collection</span>
