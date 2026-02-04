@@ -22,7 +22,7 @@ contract CollectionFactory {
             symbol,
             collectionURI,
             500,          // fixed 5% royalty
-            0.01 ether,   // fixed mint fee
+            0.0001 ether,   // fixed mint fee
             platform
         );
 
