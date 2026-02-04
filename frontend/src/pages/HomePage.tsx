@@ -147,17 +147,17 @@ export function HomePage({ onNavigate }: HomePageProps) {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="relative">
       {/* Hero Section */}
       <section
         className="relative h-screen flex items-center justify-center vignette overflow-hidden"
         style={{
-          backgroundImage: 'url(https://images.unsplash.com/photo-1718359760007-4b11d377689c?w=1920)',
+          backgroundImage: 'url(https://v3b.fal.media/files/b/0a8ba8c2/OGo8XE1LeCnXDdKbxVbvL.png)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
       >
-        <div className="absolute inset-0 backdrop-blur-sm bg-black/40" />
+        <div className="absolute inset-0 backdrop-blur-sm bg-black/60" />
         
         {/* Floating Particles */}
         <div className="absolute inset-0 pointer-events-none">
@@ -190,9 +190,9 @@ export function HomePage({ onNavigate }: HomePageProps) {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-6xl md:text-7xl mb-6 text-[var(--ivory)] font-serif"
           >
-            A New Era of
+            A New Era of Digital
             <br />
-            <span className="golden-underline text-[var(--gold)]">Digital Sovereignty</span>
+            <span className="golden-underline text-[var(--gold)] ">Art Exhibitions</span>
           </motion.h1>
 
           <motion.p
@@ -305,6 +305,95 @@ export function HomePage({ onNavigate }: HomePageProps) {
           </div>
         </div>
       </section>
+      {/* Footer */}
+<footer className="relative bg-[var(--deep-black)] border-t border-white/10">
+  <div className="max-w-7xl mx-auto px-6">
+
+    {/* Top Divider */}
+    <div className="pt-24 pb-16 grid grid-cols-1 lg:grid-cols-12 gap-12">
+
+      {/* Identity */}
+      <div className="lg:col-span-5">
+        <h2 className="font-serif text-3xl text-[var(--ivory)] mb-6 tracking-wide">
+          Gallery
+        </h2>
+        <p className="max-w-md text-sm leading-relaxed text-[var(--champagne)] opacity-70">
+          A sovereign digital art institution. Curated collections, verifiable
+          provenance, and on-chain permanence — designed for collectors who
+          value legacy over hype.
+        </p>
+      </div>
+
+      <div className=" grid grid-cols-3 md:grid-cols-4 gap-12">
+        {/* Navigation */}
+        <div className="lg:col-span-3">
+          <h4 className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] mb-6">
+            Marketplace
+          </h4>
+          <ul className="space-y-4 text-sm">
+            <li
+              onClick={() => onNavigate('collections')}
+              className="cursor-pointer text-[var(--ivory)] opacity-70 hover:opacity-100 transition"
+            >
+              Collections
+            </li>
+            <li
+              onClick={() => onNavigate('auctions')}
+              className="cursor-pointer text-[var(--ivory)] opacity-70 hover:opacity-100 transition"
+            >
+              Live Auctions
+            </li>
+            <li
+              onClick={() => onNavigate('mint-nft')}
+              className="cursor-pointer text-[var(--ivory)] opacity-70 hover:opacity-100 transition"
+            >
+              Mint Artwork
+            </li>
+          </ul>
+        </div>
+
+        {/* Institution */}
+        <div className="lg:col-span-2">
+          <h4 className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] mb-6">
+            Institution
+          </h4>
+          <ul className="space-y-4 text-sm text-[var(--ivory)] opacity-70">
+            <li>Artists</li>
+            <li>Collectors</li>
+            <li>Curators</li>
+          </ul>
+        </div>
+
+        {/* Legal */}
+        <div className="lg:col-span-2">
+          <h4 className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] mb-6">
+            Legal
+          </h4>
+          <ul className="space-y-4 text-sm text-[var(--ivory)] opacity-70">
+            <li>Terms of Service</li>
+            <li>Privacy Policy</li>
+            <li>Protocol Disclaimer</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    {/* Bottom Bar */}
+    <div className="border-t border-white/10 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
+      <span className="text-xs tracking-wide text-[var(--champagne)] opacity-50">
+        © {new Date().getFullYear()} Golden Era Art Gallery — All Rights Reserved
+      </span>
+
+      <div className="flex items-center gap-6 text-xs text-[var(--champagne)] opacity-50">
+        <span>Ethereum Native</span>
+        <span className="w-px h-4 bg-white/20" />
+        <span>On-chain Provenance</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
     </div>
   );
 }

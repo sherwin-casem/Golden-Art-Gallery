@@ -243,7 +243,7 @@ export function AuctionsPage({ onNavigate, initialAuction }: AuctionsPageProps) 
             <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
             <span className="text-sm text-red-400">Live Auctions</span>
           </div>
-          <h1 className="mb-4 text-[var(--ivory)]">Auction House</h1>
+          <h1 className="mb-4 text-4xl text-[var(--ivory)]">Auction House</h1>
           <p className="text-xl text-[var(--champagne)] max-w-2xl mx-auto">
             Place your bids on exclusive digital artworks
           </p>

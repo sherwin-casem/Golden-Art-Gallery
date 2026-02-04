@@ -34,7 +34,7 @@ export function Navbar({ onNavigate, currentPage, onSearch }: NavbarProps) {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-40 bg-[var(--deep-black)]/80 backdrop-blur-xl border-b border-[var(--border)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <button
@@ -42,9 +42,9 @@ export function Navbar({ onNavigate, currentPage, onSearch }: NavbarProps) {
             className="cursor-pointer flex items-center gap-3 group"
           >
             <div className="w-10 h-10 rounded bg-gradient-to-br from-[var(--gold)] to-[var(--antique-brass)] flex items-center justify-center group-hover:shadow-lg group-hover:shadow-[var(--gold-glow)] transition-shadow duration-300">
-              <span className="text-[var(--deep-black)] font-bold text-lg">A</span>
+              <span className="text-[var(--deep-black)] font-bold text-lg">G</span>
             </div>
-            <span className="text-xl font-serif hidden sm:block text-[var(--gold)]">Artisan</span>
+            <span className="text-xl font-serif hidden sm:block text-[var(--gold)]">Golden Era</span>
           </button>
 
           {/* Desktop Navigation */}
@@ -79,7 +79,7 @@ export function Navbar({ onNavigate, currentPage, onSearch }: NavbarProps) {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search artworks, artists, collections..."
+                placeholder="Search artworks, collections..."
                 className="w-full pl-10 pr-4 py-2 bg-[var(--input-background)] border border-[var(--border)] rounded text-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold)] transition-all"
               />
             </div>
