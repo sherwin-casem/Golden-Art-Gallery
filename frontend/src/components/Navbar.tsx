@@ -47,6 +47,21 @@ export function Navbar({ onNavigate, currentPage, onSearch }: NavbarProps) {
             <span className="text-xl font-serif hidden sm:block text-[var(--gold)]">Golden Era</span>
           </button>
 
+          
+          {/* Search Bar */}
+          <form onSubmit={handleSearch} className="hidden md:block flex-1 max-w-md mx-8">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search artworks, collections..."
+                className="w-full pl-10 pr-4 py-2 bg-[var(--input-background)] border border-[var(--border)] rounded text-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold)] transition-all"
+              />
+            </div>
+          </form>
+
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-8">
             {navItems.map((item) => (
@@ -71,19 +86,6 @@ export function Navbar({ onNavigate, currentPage, onSearch }: NavbarProps) {
             ))}
           </div>
 
-          {/* Search Bar */}
-          <form onSubmit={handleSearch} className="hidden md:block flex-1 max-w-md mx-8">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search artworks, collections..."
-                className="w-full pl-10 pr-4 py-2 bg-[var(--input-background)] border border-[var(--border)] rounded text-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold)] transition-all"
-              />
-            </div>
-          </form>
 
           {/* Wallet Info & User Menu */}
           <div className="flex items-center gap-4">
@@ -125,7 +127,7 @@ export function Navbar({ onNavigate, currentPage, onSearch }: NavbarProps) {
             ) : (
               <button
                 onClick={connect} // Or call connect() from context
-                className="px-6 py-2 border border-[var(--gold)] text-[var(--gold)] rounded hover:bg-[var(--gold)] hover:text-[var(--deep-black)] transition-all duration-300 text-sm font-medium"
+                className="cursor-pointer px-6 py-2 border border-[var(--gold)] text-[var(--gold)] rounded hover:bg-[var(--gold)] hover:text-[var(--deep-black)] transition-all duration-300 text-sm font-medium"
               >
                 Connect Wallet
               </button>
