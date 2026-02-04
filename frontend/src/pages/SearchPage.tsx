@@ -157,7 +157,7 @@ export function SearchPage({ query, onNavigate }: SearchPageProps) {
           <button
             key={f}
             onClick={() => setFilter(f as Filter)}
-            className={`block w-full text-left px-4 py-2 rounded ${
+            className={`cursor-pointer block w-full text-left px-4 py-2 rounded ${
               filter === f
                 ? 'bg-[var(--gold)] text-black'
                 : 'text-[var(--ivory)] hover:bg-white/10'
