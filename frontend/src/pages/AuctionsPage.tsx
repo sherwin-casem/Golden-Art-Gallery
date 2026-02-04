@@ -266,7 +266,7 @@ export function AuctionsPage({ onNavigate, initialAuction }: AuctionsPageProps) 
                 endTime: Number(auction.endTime) * 1000,
                 isActive: auction.isActive,
                 bids: auction.bids || [], 
-                startPrice: auction.startPrice,
+                startPrice: Number(ethers.formatEther(BigInt(auction.startPrice))),
               }}
               onClick={() =>
                 onNavigate('nft-detail', {

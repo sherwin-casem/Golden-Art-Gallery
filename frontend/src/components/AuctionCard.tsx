@@ -121,8 +121,8 @@ export function AuctionCard({ auction, onClick, index = 0 }: AuctionCardProps) {
                 <TrendingUp className="w-4 h-4" />
                 <span className="text-sm">
                   {(() => {
-                    const highestBidEth = Number(ethers.formatEther(BigInt(auction.highestBid)));
-                    const startPriceEth = Number(ethers.formatEther(BigInt(auction.startPrice)));
+                    const highestBidEth = auction.highestBid;
+                    const startPriceEth = auction.startPrice;
                     return startPriceEth > 0
                       ? (((highestBidEth - startPriceEth) / startPriceEth) * 100).toFixed(0)
                       : '0';
