@@ -40,6 +40,13 @@ export function CollectionsPage({ onNavigate, initialCollection }: CollectionsPa
   }, []);
 
   useEffect(() => {
+    if (initialCollection) {
+      setSelectedCollection(initialCollection);
+    }
+  }, [initialCollection]);
+
+
+  useEffect(() => {
     if (selectedCollection) {
       loadCollectionNFTs(selectedCollection.address);
     }
