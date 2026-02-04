@@ -12,7 +12,7 @@ import { MyNFTsPage } from './pages/MyNFTsPage';
 import { CreateCollectionPage } from './pages/CreateCollectionPage';
 import { MintNFTPage } from './pages/MintNFTPage';
 import { AuctionsPage } from './pages/AuctionsPage';
-import { ArtistsPage } from './pages/ArtistsPage';
+import { SearchPage } from './pages/searchPage';
 import './styles/globals.css';
 
 type Page = 'home' | 'collections' | 'nft-detail' | 'collection-detail' | 'my-nfts' | 'create-collection' | 'mint-nft' | 'auctions' | 'auction-detail' | 'artists' | 'artist-detail';
@@ -21,8 +21,7 @@ interface PageData {
   nft?: any;
   collection?: any;
   auction?: any;
-  artist?: any;
-  artistId?: string;
+  query?: string;
 }
 
 const queryClient = new QueryClient();
@@ -31,8 +30,7 @@ function App() {
   const [currentPage, setCurrentPage] = useState<Page>('home');
   const [pageData, setPageData] = useState<PageData>({});
   const [pageHistory, setPageHistory] = useState<Array<{ page: Page; data: PageData }>>([]);
-  const [searchQuery, setSearchQuery] = useState('');
-
+  
   const handleNavigate = (page: string, data?: any) => {
     // Save current page to history
     setPageHistory([...pageHistory, { page: currentPage, data: pageData }]);
@@ -54,12 +52,9 @@ function App() {
   };
 
   const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    // In a real app, this would filter results
-    if (query.trim()) {
-      handleNavigate('collections');
-    }
-  };
+  if (!query.trim()) return;
+  handleNavigate('search', { query });
+};
 
   return (
     <WagmiProvider config={config}>
@@ -112,13 +107,15 @@ function App() {
               initialAuction={pageData.auction}
             />
           )}
-          
-          {currentPage === 'artists' && (
-            <ArtistsPage
+
+          {currentPage === 'search' && pageData.query && (
+            <SearchPage
+              query={pageData.query}
               onNavigate={handleNavigate}
-              initialArtist={pageData.artist}
             />
           )}
+
+                    
         </main>
       </div>
     </WalletProvider>
