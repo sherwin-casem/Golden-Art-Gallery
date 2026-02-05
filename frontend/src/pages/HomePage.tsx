@@ -6,7 +6,6 @@ import { NFTCard } from '../components/NFTCard';
 import { CollectionCard } from '../components/CollectionCard';
 import { useWallet } from '../lib/WalletContext';
 
-// ABIs
 import FactoryABI from '../abis/CollectionFactory.json';
 import MarketplaceABI from '../abis/GalleryMarketplace.json';
 import GalleryABI from '../abis/GalleryNFT.json';

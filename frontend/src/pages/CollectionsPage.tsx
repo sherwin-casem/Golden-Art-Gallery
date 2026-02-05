@@ -284,31 +284,30 @@ export function CollectionsPage({ onNavigate, initialCollection }: CollectionsPa
           </motion.div>    
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
-          {collectionNFTs.map((nft, index) => (
-            <NFTCard
-              key={nft.id}
-              nft={{
-                id: nft.id,
-                image: nft.image,
-                name: nft.name,
-                price: nft.price,
-                isListed: nft.isListed,
-                artist: selectedCollection.artistName,
-                collectionName: selectedCollection.name,
-              }}
-              index={index}
-              onClick={() =>
-                onNavigate('nft-detail', {
-                  nft: {
-                    collection: nft.collection,
-                    tokenId: nft.tokenId,
-                  }                  
-                })
-              }
-            />
-          ))}
-        </div>     
-          
+            {collectionNFTs.map((nft, index) => (
+              <NFTCard
+                key={nft.id}
+                nft={{
+                  id: nft.id,
+                  image: nft.image,
+                  name: nft.name,
+                  price: nft.price,
+                  isListed: nft.isListed,
+                  artist: selectedCollection.artistName,
+                  collectionName: selectedCollection.name,
+                }}
+                index={index}
+                onClick={() =>
+                  onNavigate('nft-detail', {
+                    nft: {
+                      collection: nft.collection,
+                      tokenId: nft.tokenId,
+                    }                  
+                  })
+                }
+              />
+            ))}
+          </div>              
         </div>
       </div>
     );
