@@ -61,7 +61,7 @@ export function CollectionCard({ collection, onClick, index = 0 }: CollectionCar
               <p className="text-xs text-muted-foreground uppercase mb-1">Volume</p>
               <p className="text-[var(--ivory)] flex items-center gap-1">
                 <TrendingUp className="w-3 h-3 text-green-500" />
-                {collection.volume}
+                {collection.volume.toFixed(5)}
               </p>
             </div>
           </div>

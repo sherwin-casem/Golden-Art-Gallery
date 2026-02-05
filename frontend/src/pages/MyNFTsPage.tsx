@@ -233,7 +233,7 @@ export function MyNFTsPage({ onNavigate }: MyNFTsPageProps) {
             <DollarSign className="text-[var(--gold)] mb-2" />
             <p className="text-sm text-muted-foreground uppercase">Total Value</p>
             <p className="text-2xl text-[var(--gold)]">
-              {totalValue.toFixed(2)} ETH
+              {totalValue.toFixed(5)} ETH
             </p>
           </div>
         </div>
