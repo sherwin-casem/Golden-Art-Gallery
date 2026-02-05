@@ -275,7 +275,7 @@ export function CollectionsPage({ onNavigate, initialCollection }: CollectionsPa
                   <div>
                     <p className="text-xs text-muted-foreground uppercase mb-1">Volume</p>
                     <p className="text-xl text-[var(--ivory)]">
-                      {selectedCollection.volume} ETH
+                      {selectedCollection.volume.toFixed(5)} ETH
                     </p>
                   </div>
                 </div>
