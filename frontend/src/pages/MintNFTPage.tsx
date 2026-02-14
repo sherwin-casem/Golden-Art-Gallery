@@ -84,7 +84,6 @@ export function MintNFTPage({ onNavigate }: { onNavigate: (page: string) => void
     loadCollections();
   }, []);
 
-
     /* =========================
      IMAGE UPLOAD TRIGGER
   ========================== */
