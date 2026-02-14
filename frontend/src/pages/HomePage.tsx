@@ -116,11 +116,11 @@ export function HomePage({ onNavigate }: HomePageProps) {
         })
       }
 
-      // 🔥 Sort collections by volume
+      // Sort collections by volume
       collections.sort((a, b) => b.volume - a.volume)
       setFeaturedCollections(collections.slice(0, 3))
 
-      // 🔥 Sort NFTs: hot collections first, then lowest price
+      // Sort NFTs: hot collections first, then lowest price
       const featured = allNFTs
         .sort(
           (a, b) =>

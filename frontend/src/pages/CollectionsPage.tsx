@@ -84,10 +84,10 @@ export function CollectionsPage({ onNavigate, initialCollection }: CollectionsPa
 
       for (let tokenId = 1; tokenId <= Number(total); tokenId++) {
         try {
-          // 🔹 get listing info
+          // get listing info
           const listing = await market.listings(addr, tokenId)
 
-          // 🔴 PUBLIC COLLECTION → only listed NFTs
+          // PUBLIC COLLECTION → only listed NFTs
           if (listing.price === 0n) continue
 
           const uri = await nftContract.tokenURI(tokenId)
@@ -321,9 +321,7 @@ export function CollectionsPage({ onNavigate, initialCollection }: CollectionsPa
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
-      }}
-
-      
+      }}    
     >
       <div className="absolute inset-0 backdrop-blur-sm bg-black/50" />
       
