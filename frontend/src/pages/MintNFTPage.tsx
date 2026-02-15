@@ -124,7 +124,7 @@ export function MintNFTPage({ onNavigate }: { onNavigate: (page: string) => void
       /*  Upload image */
       const imageURI = await uploadToPinata(imageFile)
 
-      /* 2️⃣ Upload metadata */
+      /* Upload metadata */
       const metadata = {
         name: formData.name,
         description: formData.description,
