@@ -121,7 +121,7 @@ export function MintNFTPage({ onNavigate }: { onNavigate: (page: string) => void
       const provider = new ethers.BrowserProvider((window as any).ethereum)
       const signer = await provider.getSigner()
 
-      /* 1️⃣ Upload image */
+      /*  Upload image */
       const imageURI = await uploadToPinata(imageFile)
 
       /* 2️⃣ Upload metadata */
