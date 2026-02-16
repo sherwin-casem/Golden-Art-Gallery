@@ -134,7 +134,7 @@ export function MintNFTPage({ onNavigate }: { onNavigate: (page: string) => void
 
       const tokenURI = await uploadJSONToPinata(metadata)
 
-      /* 3️⃣ Mint */
+      /* Mint */
       const nftContract = new ethers.Contract(formData.collectionId, GalleryABI.abi, signer);
       const mintFee = await nftContract.mintFee();
 
