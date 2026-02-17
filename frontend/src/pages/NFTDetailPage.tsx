@@ -137,7 +137,6 @@ export function NFTDetailPage({
 
       setAuction(found)
 
-
       const owner = (await nftContract.ownerOf(tokenId)).toLowerCase()
       const listingData = await market.listings(collection, tokenId)
 
