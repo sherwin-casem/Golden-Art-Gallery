@@ -31,6 +31,7 @@ export function MyNFTsPage({ onNavigate }: MyNFTsPageProps) {
   const [nfts, setNfts] = useState<OwnedNFT[]>([])
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<'owned' | 'minted'>('owned')
+  
 
   /* =========================
      LOAD USER NFTS (REAL LOGIC)
