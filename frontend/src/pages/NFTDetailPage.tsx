@@ -262,6 +262,7 @@ export function NFTDetailPage({
     await load()
   }
 
+  
   async function handleCreateAuction() {
     if (!startPrice || Number(startPrice) <= 0) return alert('Invalid start price')
 
