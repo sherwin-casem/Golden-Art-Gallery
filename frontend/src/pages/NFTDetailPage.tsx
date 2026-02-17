@@ -62,7 +62,6 @@ export function NFTDetailPage({
   const [duration, setDuration] = useState('24')
   const [bidAmount, setBidAmount] = useState('')
 
-
   /* =========================
      LOAD NFT
   ========================== */
