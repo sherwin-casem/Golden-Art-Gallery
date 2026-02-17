@@ -62,7 +62,6 @@ export function NFTDetailPage({
   const [duration, setDuration] = useState('24')
   const [bidAmount, setBidAmount] = useState('')
 
-
   /* =========================
      LOAD NFT
   ========================== */
@@ -137,7 +136,6 @@ export function NFTDetailPage({
       }
 
       setAuction(found)
-
 
       const owner = (await nftContract.ownerOf(tokenId)).toLowerCase()
       const listingData = await market.listings(collection, tokenId)
