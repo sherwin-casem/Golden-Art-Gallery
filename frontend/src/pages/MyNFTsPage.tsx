@@ -27,7 +27,6 @@ const ipfs = (u?: string) =>
     ? u.replace('ipfs://', 'https://ipfs.io/ipfs/')
     : u || ''
 
-
 export function MyNFTsPage({ onNavigate }: MyNFTsPageProps) {
   const [nfts, setNfts] = useState<OwnedNFT[]>([])
   const [loading, setLoading] = useState(true)
