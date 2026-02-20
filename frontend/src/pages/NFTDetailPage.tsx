@@ -358,7 +358,7 @@ export function NFTDetailPage({
     }
   }
 
-
+// settle auction
   async function handleSettleAuction() {
     try {
       setActionLoading(true)
