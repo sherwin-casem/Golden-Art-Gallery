@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Search, Menu, X, Wallet, LogOut, User } from 'lucide-react';
+import { Search, Menu, X, Wallet, LogOut } from 'lucide-react';
 import { useWallet } from '../lib/WalletContext';
 import { motion, AnimatePresence } from 'motion/react';
+import { LogoIcon } from './LogoIcon';
 
 interface NavbarProps {
   onNavigate: (page: string) => void;
@@ -41,9 +42,10 @@ export function Navbar({ onNavigate, currentPage, onSearch }: NavbarProps) {
             onClick={() => onNavigate('home')}
             className="cursor-pointer flex items-center gap-3 group"
           >
-            <div className="w-10 h-10 rounded bg-gradient-to-br from-[var(--gold)] to-[var(--antique-brass)] flex items-center justify-center group-hover:shadow-lg group-hover:shadow-[var(--gold-glow)] transition-shadow duration-300">
-              <span className="text-[var(--deep-black)] font-bold text-lg">G</span>
-            </div>
+            <LogoIcon
+              size={40}
+              className="group-hover:drop-shadow-[0_0_12px_rgba(212,175,55,0.5)] transition-[filter] duration-300"
+            />
             <span className="text-xl font-serif hidden sm:block text-[var(--gold)]">Golden Era</span>
           </button>
 
