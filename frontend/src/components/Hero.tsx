@@ -37,11 +37,11 @@ export function Hero() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="flex flex-wrap items-center justify-center gap-6"
           >
-            <button className="px-8 py-4 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] text-[var(--deep-black)] font-semibold rounded hover-glow transition-all flex items-center gap-2">
+            <button className="btn btn-primary btn-lg font-semibold">
               Explore Collections
               <ArrowUpRight className="w-5 h-5" />
             </button>
-            <button className="px-8 py-4 border border-[var(--border)] text-[var(--ivory)] font-semibold rounded hover:bg-[var(--white)]/5 transition-all">
+            <button className="btn btn-outline btn-lg font-semibold">
               Create Your Art
             </button>
           </motion.div>

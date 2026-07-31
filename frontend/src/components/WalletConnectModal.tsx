@@ -30,7 +30,7 @@ export function WalletConnectModal() {
           >
             <button
               onClick={() => setShowConnectModal(false)}
-              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
+              className="btn btn-icon absolute top-4 right-4"
             >
               <X className="w-5 h-5" />
             </button>
@@ -48,7 +48,7 @@ export function WalletConnectModal() {
             <div className="space-y-4">
               <button
                 onClick={handleConnect}
-                className="w-full py-4 px-6 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] text-[var(--deep-black)] rounded hover-lift flex items-center justify-center gap-3 transition-all duration-400"
+                className="btn btn-primary btn-lg btn-full"
               >
                 <Wallet className="w-5 h-5" />
                 <span>Connect Wallet</span>

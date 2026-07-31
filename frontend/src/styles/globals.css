@@ -198,24 +198,362 @@ html {
   animation: glow 3s ease-in-out infinite;
 }
 
-/* Elegant hover effects */
+/* Elegant hover effects — legacy aliases, now with active states */
 .hover-lift {
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-              box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.22s cubic-bezier(0.34, 1.2, 0.64, 1),
+              box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.hover-lift:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 60px rgba(212, 175, 55, 0.3);
+.hover-lift:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(212, 175, 55, 0.4);
+}
+
+.hover-lift:active:not(:disabled) {
+  transform: translateY(0) scale(0.97);
+  transition-duration: 0.08s;
 }
 
 .hover-glow {
-  transition: box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.22s cubic-bezier(0.34, 1.2, 0.64, 1),
+              box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+              background-color 0.22s ease,
+              border-color 0.22s ease;
 }
 
-.hover-glow:hover {
-  box-shadow: 0 0 40px rgba(212, 175, 55, 0.5),
-              0 0 80px rgba(212, 175, 55, 0.2);
+.hover-glow:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 0 32px rgba(212, 175, 55, 0.35),
+              0 4px 16px rgba(212, 175, 55, 0.2);
+}
+
+.hover-glow:active:not(:disabled) {
+  transform: scale(0.97);
+  transition-duration: 0.08s;
+}
+
+/* ── Button interaction system ── */
+.btn {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border: none;
+  outline: none;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  transition:
+    transform 0.22s cubic-bezier(0.34, 1.2, 0.64, 1),
+    box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.22s ease,
+    background-color 0.22s ease,
+    border-color 0.22s ease,
+    color 0.22s ease,
+    opacity 0.22s ease;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.97);
+  transition-duration: 0.08s;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Primary — gold gradient CTA */
+.btn-primary {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--antique-brass) 100%);
+  color: var(--deep-black);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.2),
+    0 4px 16px rgba(212, 175, 55, 0.28);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 60%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.55s ease;
+  pointer-events: none;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.15),
+    0 8px 28px rgba(212, 175, 55, 0.45),
+    0 0 48px rgba(212, 175, 55, 0.12);
+}
+
+.btn-primary:hover:not(:disabled)::after {
+  transform: translateX(100%);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0) scale(0.97);
+  box-shadow:
+    0 1px 4px rgba(0, 0, 0, 0.2),
+    0 2px 10px rgba(212, 175, 55, 0.25);
+}
+
+/* Outline gold */
+.btn-outline-gold {
+  background: transparent;
+  color: var(--gold);
+  border: 2px solid var(--gold);
+}
+
+.btn-outline-gold:hover:not(:disabled) {
+  background: rgba(212, 175, 55, 0.1);
+  border-color: var(--champagne);
+  color: var(--champagne);
+  transform: translateY(-1px);
+  box-shadow:
+    0 0 24px rgba(212, 175, 55, 0.2),
+    inset 0 0 20px rgba(212, 175, 55, 0.05);
+}
+
+.btn-outline-gold:active:not(:disabled) {
+  transform: scale(0.97);
+  background: rgba(212, 175, 55, 0.18);
+}
+
+/* Outline subtle */
+.btn-outline {
+  background: transparent;
+  color: var(--ivory);
+  border: 2px solid var(--border);
+}
+
+.btn-outline:hover:not(:disabled) {
+  border-color: var(--gold);
+  background: rgba(255, 255, 255, 0.04);
+  transform: translateY(-1px);
+}
+
+.btn-outline:active:not(:disabled) {
+  transform: scale(0.97);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+/* Ghost */
+.btn-ghost {
+  background: transparent;
+  color: var(--ivory);
+  border: none;
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: var(--muted);
+  color: var(--gold);
+}
+
+.btn-ghost:active:not(:disabled) {
+  background: rgba(255, 254, 247, 0.15);
+}
+
+/* Destructive */
+.btn-destructive {
+  background: transparent;
+  color: #ef4444;
+  border: 2px solid rgba(239, 68, 68, 0.5);
+}
+
+.btn-destructive:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.8);
+  transform: translateY(-1px);
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.15);
+}
+
+.btn-destructive:active:not(:disabled) {
+  transform: scale(0.97);
+  background: rgba(239, 68, 68, 0.18);
+}
+
+/* Wallet badge */
+.btn-wallet {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--antique-brass) 100%);
+  color: var(--deep-black);
+  box-shadow: 0 2px 12px rgba(212, 175, 55, 0.3);
+}
+
+.btn-wallet:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.45);
+}
+
+.btn-wallet:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* Nav link button */
+.btn-nav {
+  background: transparent;
+  color: var(--ivory);
+  border: none;
+  padding: 0.5rem 0;
+}
+
+.btn-nav:hover:not(:disabled) {
+  color: var(--gold);
+}
+
+.btn-nav:active:not(:disabled) {
+  transform: scale(0.98);
+  color: var(--champagne);
+}
+
+/* Toggle / segment chip */
+.btn-toggle {
+  background: transparent;
+  color: var(--ivory);
+  border: 1px solid var(--border);
+}
+
+.btn-toggle:hover:not(:disabled) {
+  border-color: var(--gold);
+  background: rgba(212, 175, 55, 0.06);
+  transform: translateY(-1px);
+}
+
+.btn-toggle:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.btn-toggle-active {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--antique-brass) 100%);
+  color: var(--deep-black);
+  border: 1px solid transparent;
+  box-shadow: 0 2px 12px rgba(212, 175, 55, 0.3);
+}
+
+.btn-toggle-active:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.4);
+}
+
+.btn-toggle-active:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* Upload dropzone */
+.btn-upload {
+  background: transparent;
+  color: var(--ivory);
+  border: 2px dashed var(--border);
+}
+
+.btn-upload:hover:not(:disabled) {
+  border-color: var(--gold);
+  background: rgba(212, 175, 55, 0.04);
+  transform: translateY(-1px);
+}
+
+.btn-upload:active:not(:disabled) {
+  transform: scale(0.99);
+  background: rgba(212, 175, 55, 0.08);
+}
+
+/* Icon / close */
+.btn-icon {
+  background: transparent;
+  color: var(--muted-foreground);
+  border: none;
+  padding: 0.5rem;
+  border-radius: var(--radius);
+}
+
+.btn-icon:hover:not(:disabled) {
+  color: var(--ivory);
+  background: var(--muted);
+}
+
+.btn-icon:active:not(:disabled) {
+  transform: scale(0.92);
+  background: rgba(255, 254, 247, 0.15);
+}
+
+/* Overlay chip (e.g. "Change" on image preview) */
+.btn-overlay {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  border: none;
+  font-size: 0.875rem;
+}
+
+.btn-overlay:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.95);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.btn-overlay:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* Size modifiers */
+.btn-sm { padding: 0.5rem 1rem; font-size: 0.875rem; border-radius: var(--radius); }
+.btn-md { padding: 0.625rem 1.5rem; font-size: 0.875rem; border-radius: var(--radius); }
+.btn-lg { padding: 1rem 2rem; font-size: 1rem; border-radius: var(--radius); }
+.btn-full { width: 100%; }
+.btn-pill { border-radius: 9999px; }
+.btn-bold { font-weight: 700; }
+.btn-flex-1 { flex: 1; }
+
+/* Selectable card (collection picker, etc.) */
+.btn-select {
+  background: transparent;
+  color: var(--ivory);
+  border: 2px solid var(--border);
+  text-align: left;
+  justify-content: flex-start;
+}
+
+.btn-select:hover:not(:disabled) {
+  border-color: rgba(212, 175, 55, 0.5);
+  background: rgba(212, 175, 55, 0.04);
+  transform: translateY(-1px);
+}
+
+.btn-select:active:not(:disabled) {
+  transform: scale(0.99);
+}
+
+.btn-select-active {
+  border-color: var(--gold);
+  background: rgba(212, 175, 55, 0.1);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.12);
+}
+
+.btn-select-active:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 0 28px rgba(212, 175, 55, 0.18);
+}
+
+.btn-select-active:active:not(:disabled) {
+  transform: scale(0.99);
 }
 
 /* Gallery layout utilities */

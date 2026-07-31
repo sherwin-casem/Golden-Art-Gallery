@@ -64,7 +64,7 @@ export function FilterModal({ isOpen, onClose, onApply }: FilterModalProps) {
               </div>
               <button
                 onClick={onClose}
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                className="btn btn-icon"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -150,10 +150,10 @@ export function FilterModal({ isOpen, onClose, onApply }: FilterModalProps) {
                     <button
                       key={option.value}
                       onClick={() => setFilters({ ...filters, sortBy: option.value })}
-                      className={`px-4 py-3 rounded transition-all duration-300 ${
+                      className={`btn btn-md ${
                         filters.sortBy === option.value
-                          ? 'bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] text-[var(--deep-black)]'
-                          : 'border border-[var(--border)] text-[var(--ivory)] hover:border-[var(--gold)]'
+                          ? 'btn-toggle-active'
+                          : 'btn-toggle'
                       }`}
                     >
                       {option.label}
@@ -167,13 +167,13 @@ export function FilterModal({ isOpen, onClose, onApply }: FilterModalProps) {
             <div className="flex gap-4 mt-8 pt-6 border-t border-border">
               <button
                 onClick={handleReset}
-                className="flex-1 px-6 py-3 border-2 border-[var(--border)] text-[var(--ivory)] rounded hover:border-[var(--gold)] transition-colors"
+                className="btn btn-outline btn-md btn-flex-1"
               >
                 Reset
               </button>
               <button
                 onClick={handleApply}
-                className="flex-1 px-6 py-3 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] text-[var(--deep-black)] rounded hover-lift transition-all duration-400"
+                className="btn btn-primary btn-md btn-flex-1"
               >
                 Apply Filters
               </button>

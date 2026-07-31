@@ -70,10 +70,10 @@ export function Navbar({ onNavigate, currentPage, onSearch }: NavbarProps) {
               <button
                 key={item.value}
                 onClick={() => onNavigate(item.value)}
-                className={`cursor-pointer relative py-2 transition-colors duration-300 ${
+                className={`btn btn-nav relative py-2 ${
                   currentPage === item.value
                     ? 'text-[var(--gold)]'
-                    : 'text-[var(--ivory)] hover:text-[var(--gold)]'
+                    : 'text-[var(--ivory)]'
                 }`}
               >
                 {item.label}
@@ -95,7 +95,7 @@ export function Navbar({ onNavigate, currentPage, onSearch }: NavbarProps) {
               <div className="relative">
                 <button
                   onClick={() => setShowUserMenu(!showUserMenu)}
-                  className="cursor-pointer flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] text-[var(--deep-black)] rounded hover-glow transition-all duration-300"
+                  className="btn btn-wallet btn-sm"
                 >
                   <Wallet className="w-4 h-4" />
                   <span className="hidden sm:inline text-sm font-medium">
@@ -117,7 +117,7 @@ export function Navbar({ onNavigate, currentPage, onSearch }: NavbarProps) {
                           disconnect();
                           setShowUserMenu(false);
                         }}
-                        className="cursor-pointer w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-[var(--muted)] rounded transition-colors text-destructive"
+                        className="btn btn-ghost btn-sm w-full justify-start text-destructive"
                       >
                         <LogOut className="w-4 h-4" />
                         Disconnect
@@ -128,8 +128,8 @@ export function Navbar({ onNavigate, currentPage, onSearch }: NavbarProps) {
               </div>
             ) : (
               <button
-                onClick={connect} // Or call connect() from context
-                className="cursor-pointer px-6 py-2 border border-[var(--gold)] text-[var(--gold)] rounded hover:bg-[var(--gold)] hover:text-[var(--deep-black)] transition-all duration-300 text-sm font-medium"
+                onClick={connect}
+                className="btn btn-outline-gold btn-sm"
               >
                 Connect Wallet
               </button>
@@ -138,7 +138,7 @@ export function Navbar({ onNavigate, currentPage, onSearch }: NavbarProps) {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setShowMobileMenu(!showMobileMenu)}
-              className="cursor-pointer lg:hidden text-[var(--ivory)] hover:text-[var(--gold)] transition-colors"
+              className="btn btn-icon lg:hidden text-[var(--ivory)] hover:text-[var(--gold)]"
             >
               {showMobileMenu ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -161,10 +161,8 @@ export function Navbar({ onNavigate, currentPage, onSearch }: NavbarProps) {
                     onNavigate(item.value);
                     setShowMobileMenu(false);
                   }}
-                  className={`block w-full text-left px-4 py-2 rounded transition-colors ${
-                    currentPage === item.value
-                      ? 'bg-[var(--muted)] text-[var(--gold)]'
-                      : 'text-[var(--ivory)] hover:bg-[var(--muted)]'
+                  className={`btn btn-ghost btn-md w-full justify-start ${
+                    currentPage === item.value ? 'text-[var(--gold)] bg-[var(--muted)]' : ''
                   }`}
                 >
                   {item.label}

@@ -74,10 +74,10 @@ export function NFTCard({ nft, onClick, index = 0 }: NFTCardProps) {
             </div>
             
             <div className="flex items-center gap-3 text-muted-foreground">
-              <button className="hover:text-[var(--gold)] transition-colors">
+              <button className="btn btn-icon p-1">
                 <Heart className="w-4 h-4" />
               </button>
-              <button className="hover:text-[var(--gold)] transition-colors">
+              <button className="btn btn-icon p-1">
                 <Eye className="w-4 h-4" />
               </button>
             </div>

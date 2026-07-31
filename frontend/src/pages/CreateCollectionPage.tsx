@@ -201,7 +201,7 @@ export function CreateCollectionPage({ onNavigate }: CreateCollectionPageProps) 
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
-                      className="cursor-pointer absolute top-2 right-2 px-3 py-3 bg-black/80 text-white text-sm rounded hover:bg-black transition-colors"
+                      className="btn btn-overlay btn-sm absolute top-2 right-2 px-3 py-3"
                     >
                       Change
                     </button>
@@ -210,7 +210,7 @@ export function CreateCollectionPage({ onNavigate }: CreateCollectionPageProps) 
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="cursor-pointer w-full aspect-video border-2 border-dashed border-[var(--border)] rounded flex flex-col items-center justify-center gap-4 hover:border-[var(--gold)] transition-colors group"
+                    className="btn btn-upload btn-lg btn-full aspect-video flex-col gap-4 group"
                   >
                     <Upload className="w-12 h-12 text-muted-foreground group-hover:text-[var(--gold)] transition-colors" />
                     <div className="text-center">
@@ -228,14 +228,14 @@ export function CreateCollectionPage({ onNavigate }: CreateCollectionPageProps) 
                 <button
                   type="button"
                   onClick={() => setPreview(!preview)}
-                  className="cursor-pointer flex-1 px-6 py-4 border-2 border-[var(--gold)] text-[var(--gold)] rounded hover-glow transition-all duration-400"
+                  className="btn btn-outline-gold btn-lg btn-flex-1"
                 >
                   {preview ? 'Edit' : 'Preview'}
                 </button>
                 <button
                   type="submit"
                   disabled={!formData.name || !formData.description || !formData.coverFile}
-                  className="cursor-pointer flex-1 px-6 py-4 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] text-[var(--deep-black)] rounded hover-lift transition-all duration-400 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="btn btn-primary btn-lg btn-flex-1 btn-bold"
                 >
                   Create Collection
                 </button>

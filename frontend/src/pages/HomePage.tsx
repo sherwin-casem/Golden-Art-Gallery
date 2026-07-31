@@ -211,14 +211,14 @@ export function HomePage({ onNavigate }: HomePageProps) {
           >
             <button
               onClick={() => onNavigate('collections')}
-              className="cursor-pointer px-8 py-4 bg-gradient-to-r from-[var(--gold)] to-[var(--antique-brass)] text-[var(--deep-black)] rounded hover-lift flex items-center gap-3 transition-all font-bold"
+              className="btn btn-primary btn-lg btn-bold"
             >
               <span>Enter Gallery</span>
               <ArrowRight className="w-5 h-5" />
             </button>
             <button
               onClick={() => onNavigate('auctions')}
-              className="cursor-pointer px-8 py-4 border-2 border-[var(--gold)] text-[var(--gold)] rounded hover-glow transition-all flex items-center gap-2"
+              className="btn btn-outline-gold btn-lg"
             >
               <Gavel className="w-5 h-5" />
               Live Auctions
@@ -289,14 +289,14 @@ export function HomePage({ onNavigate }: HomePageProps) {
             {!isConnected ? (
               <button
                 onClick={connect}
-                className="cursor-pointer px-8 py-4 bg-[var(--gold)] text-[var(--deep-black)] rounded-full font-bold hover:scale-105 transition-transform"
+                className="btn btn-primary btn-lg btn-pill btn-bold"
               >
                 Connect Wallet
               </button>
             ) : (
               <button
                 onClick={() => onNavigate('mint-nft')}
-                className="cursor-pointer px-8 py-4 bg-[var(--gold)] text-[var(--deep-black)] rounded-full font-bold hover:scale-105 transition-transform"
+                className="btn btn-primary btn-lg btn-pill btn-bold"
               >
                 Mint Artwork
               </button>
